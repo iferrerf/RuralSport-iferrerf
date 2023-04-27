@@ -1,0 +1,84 @@
+{
+  "project_info": {
+    "project_number": "156182500729",
+    "project_id": "rural-sport",
+    "storage_bucket": "rural-sport.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156182500729:android:54f21be0a95e23a5d8cba8",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app_final_iferrerf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156182500729-npfqpcma1am5lvp89qvthf55eoc7hadv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3QX6H9fLjP-z4VexczKhWA74EBk6DJZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156182500729-npfqpcma1am5lvp89qvthf55eoc7hadv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156182500729:android:19bdf06fe53ec939d8cba8",
+        "android_client_info": {
+          "package_name": "org.iesch.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156182500729-0rkcn57tj678hgmo1iuji00at3uq1usj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.iesch.myapplication",
+            "certificate_hash": "187ae65f7b9b0f4de9905d3f74c0b4c465bd45a0"
+          }
+        },
+        {
+          "client_id": "156182500729-km32r3i4t8q9f6dlitgv29238plcc38r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.iesch.myapplication",
+            "certificate_hash": "51e8f4bb9af9d00861887b88edded6e04b32c5bd"
+          }
+        },
+        {
+          "client_id": "156182500729-npfqpcma1am5lvp89qvthf55eoc7hadv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3QX6H9fLjP-z4VexczKhWA74EBk6DJZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156182500729-npfqpcma1am5lvp89qvthf55eoc7hadv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
