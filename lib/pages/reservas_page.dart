@@ -89,12 +89,6 @@ class _ReservasPageState extends State<ReservasPage> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _auth = FirebaseAuth.instance;
-      user = _auth.currentUser;
-      email = user?.email.toString();
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Padding(
