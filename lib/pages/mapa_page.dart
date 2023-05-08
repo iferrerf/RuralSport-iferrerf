@@ -17,10 +17,10 @@ final zoom = LatLng(40.547240, -0.348118);
 class MapPage extends StatelessWidget {
   MapPage({super.key});
 
-  String textoPoli =
+  final String textoPoli =
       "- Multideporte en espacio cerrado\n- Abierta todo el año\n- Uso en horario de actividades";
-  String textoPadel = "- Pista al aire libre\n- Abierta todo el año";
-  String rutaImagenes = "assets/pistas/";
+  final String textoPadel = "- Pista al aire libre\n- Abierta todo el año";
+  final String rutaImagenes = "assets/pistas/";
 
   void mostrarAlertaIOS(
       BuildContext context, String titulo, String mensaje, String rutaImagen) {

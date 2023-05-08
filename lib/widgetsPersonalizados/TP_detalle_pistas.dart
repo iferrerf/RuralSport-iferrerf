@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TP_detalle_pistas extends StatelessWidget {
   TP_detalle_pistas({
     Key? key,

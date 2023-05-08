@@ -50,6 +50,11 @@ class _ReservasPageState extends State<ReservasPage> {
   @override
   void initState() {
     super.initState();
+
+    _auth = FirebaseAuth.instance;
+    user = _auth.currentUser;
+    email = user?.email.toString();
+
     FirebaseFirestore.instance.collection(COLLECTION_NAME).snapshots().listen(
       (reservas) {
         mapReservas(reservas);
@@ -82,6 +87,7 @@ class _ReservasPageState extends State<ReservasPage> {
               tiempo: reserva['tiempo'],
             ))
         .toList();
+
     setState(() {
       listaReservas = _list;
     });
