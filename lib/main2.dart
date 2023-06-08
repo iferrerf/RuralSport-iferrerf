@@ -1,4 +1,4 @@
-import 'package:flutter_app_final_iferrerf/pages/admin.dart';
+import 'package:flutter_app_final_iferrerf/pages/admin/admin_menu.dart';
 
 import 'pages/imports.dart';
 import 'pages/pages.dart';
@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
               _isLoading = false;
             });
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => AdminPage()),
+              MaterialPageRoute(builder: (_) => Admin_Menu()),
             );
           } else {
             setState(() {

@@ -44,6 +44,13 @@ class TP_tarjeta_pistas extends StatelessWidget {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Divider(
+                        thickness: 2.0,
+                        color: Colors.black,
+                      ),
+                    ),
                     Text(localidad!),
                     Text(temporada!),
                     Text(horario!),

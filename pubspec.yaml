@@ -63,6 +63,17 @@ dependencies:
   #Carrusel Imagenes
   card_swiper: ^2.0.4
 
+  # Vistas Calendario
+  calendar_view: ^1.0.3
+  syncfusion_flutter_calendar: ^21.2.4
+  table_calendar: ^3.0.9
+
+  #Mongo DB
+  mongo_dart: ^0.9.1
+  
+  #Manejo de APIs
+  http: ^0.13.6
+
 
 
 dev_dependencies:

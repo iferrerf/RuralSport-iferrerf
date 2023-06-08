@@ -144,8 +144,7 @@ class PistasPage extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.lightBlue.shade200,
-      drawerScrimColor: Colors.black,
+      backgroundColor: Colors.grey.shade200,
     );
   }
 }
