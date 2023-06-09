@@ -1,6 +1,6 @@
-import 'admin/admin_menu.dart';
-import 'imports.dart';
-import 'pages.dart';
+import '../admin/menu/admin_menu.dart';
+import '../imports.dart';
+import '../pages.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -42,9 +42,9 @@ class Login extends StatelessWidget {
           // En caso de errores en el proceso de login, informamos al usuario
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
-            return 'User not exists';
+            return 'Usuario no existe';
           } else if (e.code == 'wrong-password') {
-            return 'Password does not match';
+            return 'Contraseñas no coinciden';
           }
           return 'Error: ${e.message}';
         } catch (e) {
@@ -76,9 +76,9 @@ class Login extends StatelessWidget {
           // En caso de errores en el registro, informamos al usuario
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
-            return 'The password provided is too weak.';
+            return 'La contraseña es demasiado débil.';
           } else if (e.code == 'email-already-in-use') {
-            return 'The account already exists for that email.';
+            return 'Ya existe una cuanta con ese email.';
           }
           return 'Error: ${e.message}';
         } catch (e) {
@@ -105,7 +105,7 @@ class Login extends StatelessWidget {
                   accessToken: googleAuth.accessToken,
                   idToken: googleAuth.idToken,
                 );
-                // Tratamos de iniciar sesión a Firebase Authentication
+                // Tratamos de iniciar sesión con Firebase Authentication
                 await FirebaseAuth.instance.signInWithCredential(credential);
                 DocumentSnapshot userDoc = await FirebaseFirestore.instance
                     .collection('roles')
@@ -134,7 +134,6 @@ class Login extends StatelessWidget {
               }
             }),
       ],
-
       // Despues de la animacion nos lleva a la pagina de inicio
       onSubmitAnimationCompleted: () {
         //Obtner rol de firebase y redirigir a la pagina correspondiente

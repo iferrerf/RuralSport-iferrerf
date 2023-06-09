@@ -1,8 +1,8 @@
-import 'package:flutter_app_final_iferrerf/pages/mongo_config.dart';
+import 'package:flutter_app_final_iferrerf/pages/mongoDB/mongo_config.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'imports.dart';
+import '../imports.dart';
 
 class Event {
   String id;

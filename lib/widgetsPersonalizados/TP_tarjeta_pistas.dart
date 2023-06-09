@@ -3,21 +3,17 @@ import 'package:flutter/material.dart';
 class TP_tarjeta_pistas extends StatelessWidget {
   const TP_tarjeta_pistas({
     Key? key,
-    required this.imageUrl,
-    required this.nombre,
-    required this.localidad,
-    this.horario,
-    required this.temporada,
+    required this.pistaInfo,
   }) : super(key: key);
 
-  final String imageUrl;
-  final String nombre;
-  final String? localidad;
-  final String? horario;
-  final String? temporada;
+  final Map<String, dynamic> pistaInfo;
 
   @override
   Widget build(BuildContext context) {
+    final List<String> images = pistaInfo['images'] ?? [];
+    final String nombre = pistaInfo['nombre'] ?? '';
+    final String localidad = pistaInfo['lugar'] ?? '';
+
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
@@ -26,37 +22,35 @@ class TP_tarjeta_pistas extends StatelessWidget {
       child: Column(
         children: [
           FadeInImage(
-            image: AssetImage(imageUrl),
+            image: NetworkImage(images.elementAt(0)),
             placeholder: const AssetImage('assets/logos/palapadel.png'),
             fadeInDuration: const Duration(milliseconds: 300),
             height: 250.0,
             fit: BoxFit.cover,
           ),
           Container(
-              color: Colors.amber.shade300,
-              alignment: AlignmentDirectional.centerEnd,
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      nombre,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            color: Colors.amber.shade300,
+            alignment: AlignmentDirectional.centerEnd,
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    nombre,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Divider(
+                      thickness: 2.0,
+                      color: Colors.black,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Divider(
-                        thickness: 2.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(localidad!),
-                    Text(temporada!),
-                    Text(horario!),
-                  ],
-                ),
-              )),
+                  ),
+                  Text(localidad),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

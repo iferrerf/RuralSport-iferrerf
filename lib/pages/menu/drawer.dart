@@ -1,7 +1,7 @@
-import 'package:flutter_app_final_iferrerf/pages/mapa_page.dart';
-import 'package:flutter_app_final_iferrerf/pages/pages.dart';
+import 'package:flutter_app_final_iferrerf/pages/pistas/pistas_page.dart';
+import 'package:flutter_app_final_iferrerf/pages/mapa/mapa_page.dart';
 import 'package:flutter_app_final_iferrerf/pages/imports.dart';
-import '../pages/reservas_page.dart';
+import '../reservas/reservas_page.dart';
 
 // Traemos de Firebase el usuario registrado
 FirebaseAuth _auth = FirebaseAuth.instance;
@@ -105,7 +105,7 @@ Widget _buildDrawerHeader(String fotoUrl, String email) {
     decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage('assets/mosaicos/fondopadel2.jpg'),
-            fit: BoxFit.cover)), // añade fit para ajustar la imagen
+            fit: BoxFit.cover)),
     child: Container(
         margin: const EdgeInsets.only(right: 10),
         child: Stack(children: <Widget>[

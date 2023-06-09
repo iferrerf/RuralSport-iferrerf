@@ -6,5 +6,4 @@ export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:google_sign_in/google_sign_in.dart';
 export 'package:flutter_login/flutter_login.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
-export '../widgetsPersonalizados/TP_tarjeta_pistas.dart';
 export 'package:flutter_app_final_iferrerf/firebase_options.dart';

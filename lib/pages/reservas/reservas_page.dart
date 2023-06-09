@@ -1,5 +1,5 @@
-import 'imports.dart';
-import 'pages.dart';
+import '../imports.dart';
+import '../pages.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 const COLLECTION_NAME = 'reservas';

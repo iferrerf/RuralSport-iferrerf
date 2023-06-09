@@ -5,27 +5,20 @@ import 'package:flutter/material.dart';
 class TP_detalle_pistas extends StatelessWidget {
   TP_detalle_pistas({
     Key? key,
-    required this.imageUrl,
-    required this.nombre,
-    required this.localidad,
-    required this.horario,
-    required this.temporada,
-    this.descripcion,
+    required this.pistaInfo,
   }) : super(key: key);
 
-  final String imageUrl;
-  final String nombre;
-  final String localidad;
-  final String horario;
-  final String temporada;
-  final String? descripcion;
-
-  List<String> images = [];
+  final Map<String, dynamic> pistaInfo;
 
   @override
   Widget build(BuildContext context) {
-    // CAMBIAR LAS IMAGENES POR FOTOS REALES
-    images = [imageUrl, imageUrl, imageUrl, imageUrl];
+    final String nombre = pistaInfo['nombre'] ?? '';
+    final String lugar = pistaInfo['lugar'] ?? '';
+    final String horario = pistaInfo['horario'] ?? '';
+    final String temporada = pistaInfo['temporada'] ?? '';
+    final List<dynamic> images = pistaInfo['images'] ?? [];
+    final String anoConstruccion = pistaInfo['añoConstruccion'] ?? '';
+    final String estado = pistaInfo['estado'] ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -40,40 +33,105 @@ class TP_detalle_pistas extends StatelessWidget {
       ),
       body: Column(
         children: [
-          _swiper(),
+          _swiper(images),
           Container(
-              color: Colors.lightBlueAccent,
-              alignment: AlignmentDirectional.centerEnd,
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      nombre,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    Text(localidad),
-                    Text(temporada),
-                    Text(horario),
-                  ],
+            color: Colors.lightBlueAccent,
+            alignment: AlignmentDirectional.centerStart,
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: Card(
+                margin: EdgeInsets.all(10.0),
+                borderOnForeground: true,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              nombre,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          _buildInfoRow(
+                              'Municipio:', lugar, Colors.black, Colors.blue),
+                          _buildInfoRow('Temporada:', temporada, Colors.black,
+                              Colors.blue),
+                          _buildInfoRow(
+                              'Horario:', horario, Colors.black, Colors.blue),
+                          _buildInfoRow('Año Construcción:', anoConstruccion,
+                              Colors.black, Colors.blue),
+                          _buildInfoRow(
+                              'Estado:', estado, Colors.black, Colors.blue),
+                        ],
+                      ),
+                      Positioned(
+                        top: 40,
+                        right: 0,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Acción del botón
+                          },
+                          child: Icon(Icons.assignment_add),
+                          style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(), fixedSize: Size(70, 70)),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _swiper() {
+  Widget _buildInfoRow(
+      String title, String data, Color titleColor, Color dataColor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: titleColor,
+            ),
+          ),
+          SizedBox(width: 5),
+          Text(
+            data,
+            style: TextStyle(
+              fontSize: 16,
+              color: dataColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _swiper(List<dynamic> images) {
     return Container(
       width: double.infinity,
       height: 250.0,
       color: Colors.lightBlue.shade200,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
-          return Image.asset(images[index]);
+          return Image.network(images[index]);
         },
-        itemCount: 4,
+        itemCount: images.length,
         pagination: SwiperPagination(),
         control: SwiperControl(),
         viewportFraction: 0.95,

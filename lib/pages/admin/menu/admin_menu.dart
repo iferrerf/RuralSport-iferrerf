@@ -1,8 +1,8 @@
-import 'package:flutter_app_final_iferrerf/pages/admin/pistas_page.dart';
-import 'package:flutter_app_final_iferrerf/pages/admin/reservas_page_admin.dart';
-import 'package:flutter_app_final_iferrerf/pages/eventos.dart';
+import 'package:flutter_app_final_iferrerf/pages/pistas/pistas_page.dart';
+import 'package:flutter_app_final_iferrerf/pages/calendario/reservas_page_admin.dart';
+import 'package:flutter_app_final_iferrerf/pages/calendario/eventos.dart';
 import 'package:flutter_app_final_iferrerf/pages/imports.dart';
-import 'package:flutter_app_final_iferrerf/pages/todas_reservas.dart';
+import 'package:flutter_app_final_iferrerf/pages/reservas/todas_reservas.dart';
 
 // Traemos de Firebase el usuario registrado
 FirebaseAuth _auth = FirebaseAuth.instance;
@@ -56,7 +56,7 @@ class _Admin_MenuState extends State<Admin_Menu> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PistasPage2(),
+                              builder: (context) => PistasPage(),
                             ))
                       }),
 

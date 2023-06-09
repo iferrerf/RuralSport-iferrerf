@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Pista {
   final String id;
   final String nombre;
@@ -7,14 +5,18 @@ class Pista {
   final String horario;
   final String temporada;
   final List<String> images;
+  final String anoConstruccion;
+  final String estado;
 
   Pista({
-    required this.images,
     required this.id,
     required this.nombre,
     required this.localidad,
     required this.horario,
     required this.temporada,
+    required this.images,
+    required this.anoConstruccion,
+    required this.estado,
   });
 
   factory Pista.fromJson(Map<String, dynamic> json) {
@@ -24,7 +26,9 @@ class Pista {
       localidad: json['lugar'],
       horario: json['horario'],
       temporada: json['temporada'],
-      images: List<String>.from(['images']),
+      images: List<String>.from(json['images']),
+      anoConstruccion: json['añoConstruccion'],
+      estado: json['estado'],
     );
   }
 
@@ -36,6 +40,8 @@ class Pista {
       "horario": horario,
       "temporada": temporada,
       "images": images,
+      "añoConstruccion": anoConstruccion,
+      "estado": estado
     };
   }
 }
