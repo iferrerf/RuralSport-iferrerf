@@ -19,11 +19,12 @@ class TP_detalle_pistas extends StatelessWidget {
     final List<dynamic> images = pistaInfo['images'] ?? [];
     final String anoConstruccion = pistaInfo['añoConstruccion'] ?? '';
     final String estado = pistaInfo['estado'] ?? '';
+    final String descripcion = pistaInfo['descripcion'] ?? '';
 
     return Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: const EdgeInsets.all(40),
+          padding: const EdgeInsets.all(16),
           child: Text(
             nombre,
             style: TextStyle(color: Colors.white),
@@ -31,83 +32,144 @@ class TP_detalle_pistas extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          _swiper(images),
-          Container(
-            color: Colors.lightBlueAccent,
-            alignment: AlignmentDirectional.centerStart,
-            padding: const EdgeInsets.all(10.0),
-            child: Center(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _swiper(images),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Card(
-                margin: EdgeInsets.all(10.0),
-                borderOnForeground: true,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          nombre,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                        child: Column(
+                          children: [
+                            Text(
+                              nombre,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            _buildInfoRow(
+                              'Municipio:',
+                              lugar,
+                              Colors.black,
+                              Colors.blue,
+                            ),
+                            _buildInfoRow(
+                              'Temporada:',
+                              temporada,
+                              Colors.black,
+                              Colors.blue,
+                            ),
+                            _buildInfoRow(
+                              'Horario:',
+                              horario,
+                              Colors.black,
+                              Colors.blue,
+                            ),
+                            _buildInfoRow(
+                              'Año Construcción:',
+                              anoConstruccion,
+                              Colors.black,
+                              Colors.blue,
+                            ),
+                            _buildInfoRow(
+                              'Estado:',
+                              estado,
+                              Colors.black,
+                              Colors.blue,
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 8),
-                      _buildInfoRow(
-                          'Municipio:', lugar, Colors.black, Colors.blue),
-                      _buildInfoRow(
-                          'Temporada:', temporada, Colors.black, Colors.blue),
-                      _buildInfoRow(
-                          'Horario:', horario, Colors.black, Colors.blue),
-                      _buildInfoRow('Año Construcción:', anoConstruccion,
-                          Colors.black, Colors.blue),
-                      _buildInfoRow(
-                          'Estado:', estado, Colors.black, Colors.blue),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Descripción:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      descripcion,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildInfoRow(
-      String title, String data, Color titleColor, Color dataColor) {
+    String title,
+    String data,
+    Color titleColor,
+    Color dataColor,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 35.0),
       child: Row(
         children: [
           Expanded(
-            flex: 4,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: titleColor,
-                ),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: titleColor,
               ),
             ),
           ),
           Expanded(
-            flex: 3,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                data,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: dataColor,
-                ),
+            child: Text(
+              data,
+              style: TextStyle(
+                fontSize: 16,
+                color: dataColor,
               ),
             ),
           ),
@@ -118,12 +180,18 @@ class TP_detalle_pistas extends StatelessWidget {
 
   Widget _swiper(List<dynamic> images) {
     return Container(
-      width: double.infinity,
       height: 250.0,
-      color: Colors.lightBlue.shade200,
+      margin: EdgeInsets.only(top: 10),
+      color: Colors.white70,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
-          return Image.network(images[index]);
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Image.network(
+              images[index],
+              fit: BoxFit.cover,
+            ),
+          );
         },
         itemCount: images.length,
         pagination: SwiperPagination(),

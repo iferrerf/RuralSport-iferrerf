@@ -7,6 +7,7 @@ class Pista {
   final List<String> images;
   final String anoConstruccion;
   final String estado;
+  final String descripcion;
 
   Pista({
     required this.id,
@@ -17,6 +18,7 @@ class Pista {
     required this.images,
     required this.anoConstruccion,
     required this.estado,
+    required this.descripcion,
   });
 
   factory Pista.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Pista {
       images: List<String>.from(json['images']),
       anoConstruccion: json['añoConstruccion'],
       estado: json['estado'],
+      descripcion: json['descripcion'],
     );
   }
 
@@ -41,7 +44,8 @@ class Pista {
       "temporada": temporada,
       "images": images,
       "añoConstruccion": anoConstruccion,
-      "estado": estado
+      "estado": estado,
+      "descripcion": descripcion,
     };
   }
 }
