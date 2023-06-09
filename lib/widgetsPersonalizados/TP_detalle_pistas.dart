@@ -43,47 +43,30 @@ class TP_detalle_pistas extends StatelessWidget {
                 margin: EdgeInsets.all(10.0),
                 borderOnForeground: true,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Stack(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              nombre,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          nombre,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
-                          SizedBox(height: 8),
-                          _buildInfoRow(
-                              'Municipio:', lugar, Colors.black, Colors.blue),
-                          _buildInfoRow('Temporada:', temporada, Colors.black,
-                              Colors.blue),
-                          _buildInfoRow(
-                              'Horario:', horario, Colors.black, Colors.blue),
-                          _buildInfoRow('Año Construcción:', anoConstruccion,
-                              Colors.black, Colors.blue),
-                          _buildInfoRow(
-                              'Estado:', estado, Colors.black, Colors.blue),
-                        ],
-                      ),
-                      Positioned(
-                        top: 40,
-                        right: 0,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Acción del botón
-                          },
-                          child: Icon(Icons.assignment_add),
-                          style: ElevatedButton.styleFrom(
-                              shape: CircleBorder(), fixedSize: Size(70, 70)),
                         ),
                       ),
+                      SizedBox(height: 8),
+                      _buildInfoRow(
+                          'Municipio:', lugar, Colors.black, Colors.blue),
+                      _buildInfoRow(
+                          'Temporada:', temporada, Colors.black, Colors.blue),
+                      _buildInfoRow(
+                          'Horario:', horario, Colors.black, Colors.blue),
+                      _buildInfoRow('Año Construcción:', anoConstruccion,
+                          Colors.black, Colors.blue),
+                      _buildInfoRow(
+                          'Estado:', estado, Colors.black, Colors.blue),
                     ],
                   ),
                 ),
@@ -101,20 +84,31 @@ class TP_detalle_pistas extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: titleColor,
+          Expanded(
+            flex: 4,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
+              ),
             ),
           ),
-          SizedBox(width: 5),
-          Text(
-            data,
-            style: TextStyle(
-              fontSize: 16,
-              color: dataColor,
+          Expanded(
+            flex: 3,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                data,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: dataColor,
+                ),
+              ),
             ),
           ),
         ],
