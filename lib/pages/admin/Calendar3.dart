@@ -1,8 +1,6 @@
 // Copyright 2019 Aleksander Woźniak
 // SPDX-License-Identifier: Apache-2.0
 
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app_final_iferrerf/pages/admin/utils.dart';
 import 'package:table_calendar/table_calendar.dart';

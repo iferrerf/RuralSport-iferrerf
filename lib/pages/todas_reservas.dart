@@ -2,7 +2,6 @@ import 'package:flutter_app_final_iferrerf/pages/admin/Calendar.dart';
 
 import 'imports.dart';
 import 'pages.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 const COLLECTION_NAME = 'reservas';
 

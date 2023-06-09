@@ -15,7 +15,7 @@ class PistasPage2 extends StatefulWidget {
 }
 
 class _PistasPage2State extends State<PistasPage2> {
-  List<dynamic> pistas = [];
+  List<Pista> pistas = [];
 
   @override
   void initState() {
@@ -24,13 +24,13 @@ class _PistasPage2State extends State<PistasPage2> {
   }
 
   Future<void> fetchPistas() async {
-    final response =
-        await http.get(Uri.parse('http://172.19.144.1:3000/api/pistas'));
+    final response = await http
+        .get(Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'));
     if (response.statusCode == 200) {
       setState(() {
-        print(response.body);
-        pistas = jsonDecode(response.body);
-        print(pistas);
+        final List<dynamic> pistaData = jsonDecode(response.body);
+        pistas =
+            pistaData.map((pistaJson) => Pista.fromJson(pistaJson)).toList();
       });
     } else {
       print('Error al obtener las pistas');
@@ -54,25 +54,65 @@ class _PistasPage2State extends State<PistasPage2> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         itemCount: pistas.length,
         itemBuilder: (context, index) {
-          final pistaInfo = pistas[index];
+          final pista = pistas[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => TP_detalle_pistas2(
-                    pistaInfo: pistaInfo,
+                    pistaInfo: pista.toJson(),
                   ),
                 ),
               );
             },
             child: TP_tarjeta_pistas2(
-              pistaInfo: pistaInfo,
+              pistaInfo: pista.toJson(),
             ),
           );
         },
       ),
       backgroundColor: Colors.grey.shade200,
     );
+  }
+}
+
+class Pista {
+  final String id;
+  final String nombre;
+  final String localidad;
+  final String horario;
+  final String temporada;
+  final List<String> images;
+
+  Pista({
+    required this.id,
+    required this.nombre,
+    required this.localidad,
+    required this.horario,
+    required this.temporada,
+    required this.images,
+  });
+
+  factory Pista.fromJson(Map<String, dynamic> json) {
+    return Pista(
+      id: json['_id'],
+      nombre: json['nombre'],
+      localidad: json['lugar'],
+      horario: json['horario'],
+      temporada: json['temporada'],
+      images: List<String>.from(json['images']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "nombre": nombre,
+      "lugar": localidad,
+      "horario": horario,
+      "temporada": temporada,
+      "images": images,
+    };
   }
 }

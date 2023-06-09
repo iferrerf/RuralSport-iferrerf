@@ -2,8 +2,6 @@ import '../imports.dart';
 import '../pages.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import 'package:calendar_view/calendar_view.dart';
-
 const COLLECTION_NAME = 'reservas';
 
 FirebaseAuth _auth = FirebaseAuth.instance;

@@ -16,6 +16,8 @@ class TP_tarjeta_pistas2 extends StatelessWidget {
     final String horario = pistaInfo['horario'] ?? '';
     final String temporada = pistaInfo['temporada'] ?? '';
 
+    print(images);
+
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
@@ -24,7 +26,7 @@ class TP_tarjeta_pistas2 extends StatelessWidget {
       child: Column(
         children: [
           FadeInImage(
-            image: AssetImage(images[1]),
+            image: NetworkImage(images.elementAt(0)),
             placeholder: const AssetImage('assets/logos/palapadel.png'),
             fadeInDuration: const Duration(milliseconds: 300),
             height: 250.0,

@@ -6,11 +6,9 @@ class TP_detalle_pistas2 extends StatelessWidget {
   TP_detalle_pistas2({
     Key? key,
     required this.pistaInfo,
-    this.descripcion,
   }) : super(key: key);
 
   final Map<String, dynamic> pistaInfo;
-  final String? descripcion;
 
   @override
   Widget build(BuildContext context) {

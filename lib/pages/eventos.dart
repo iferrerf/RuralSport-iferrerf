@@ -1,6 +1,5 @@
 import 'package:flutter_app_final_iferrerf/pages/mongo_config.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'imports.dart';
@@ -303,11 +302,11 @@ class _EventosPageState extends State<EventosPage> {
     );
   }
 
-  void _deleteEvent(Event event) {
-    setState(() {
-      _events.remove(event);
-    });
-  }
+  // void _deleteEvent(Event event) {
+  //   setState(() {
+  //     _events.remove(event);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

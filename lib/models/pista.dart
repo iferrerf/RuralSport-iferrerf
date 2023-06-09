@@ -1,37 +1,41 @@
 import 'dart:convert';
 
-Pista pistaFromJson(String str) => Pista.fromJson(json.decode(str));
-
-String pistaToJson(Pista data) => json.encode(data.toJson());
-
 class Pista {
+  final String id;
+  final String nombre;
+  final String localidad;
+  final String horario;
+  final String temporada;
+  final List<String> images;
+
   Pista({
+    required this.images,
     required this.id,
     required this.nombre,
-    this.localidad,
-    this.horario,
-    this.temporada,
+    required this.localidad,
+    required this.horario,
+    required this.temporada,
   });
 
-  String id;
-  String nombre;
-  String? localidad;
-  String? horario;
-  String? temporada;
+  factory Pista.fromJson(Map<String, dynamic> json) {
+    return Pista(
+      id: json['_id'],
+      nombre: json['nombre'],
+      localidad: json['lugar'],
+      horario: json['horario'],
+      temporada: json['temporada'],
+      images: List<String>.from(['images']),
+    );
+  }
 
-  factory Pista.fromJson(Map<String, dynamic> json) => Pista(
-        id: json["id"],
-        nombre: json["nombre"],
-        localidad: json["localidad"] ?? '',
-        horario: json["horario"] ?? '',
-        temporada: json["temporada"] ?? '',
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "nombre": nombre,
-        "localidad": localidad,
-        "horario": horario,
-        "temporada": temporada,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "nombre": nombre,
+      "lugar": localidad,
+      "horario": horario,
+      "temporada": temporada,
+      "images": images,
+    };
+  }
 }
