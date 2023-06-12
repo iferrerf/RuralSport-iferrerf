@@ -40,6 +40,7 @@ class TP_detalle_pistas extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Card(
+                color: Colors.grey.shade300,
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
@@ -181,7 +182,7 @@ class TP_detalle_pistas extends StatelessWidget {
   Widget _swiper(List<dynamic> images) {
     return Container(
       height: 250.0,
-      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(10),
       color: Colors.white70,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {

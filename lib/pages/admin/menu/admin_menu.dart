@@ -42,7 +42,7 @@ class _Admin_MenuState extends State<Admin_Menu> {
         ),
         body: ReservasPageAdmin(),
         drawer: Drawer(
-          backgroundColor: Colors.green.shade200,
+          backgroundColor: Colors.lightGreen.shade200,
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
@@ -151,7 +151,7 @@ Widget _buildDrawerItem(
   return ListTile(
     title: Row(
       children: <Widget>[
-        Icon(icon, color: Colors.green.shade800, size: 30),
+        Icon(icon, color: Colors.lightGreen.shade700, size: 30),
         Padding(
           padding: EdgeInsets.only(left: 8.0),
           child: Text(

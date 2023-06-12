@@ -71,9 +71,36 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
     );
 
     if (response.statusCode == 200) {
-      print('Pista actualizada correctamente');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Pista actualizada correctamente'),
+            ],
+          ),
+          backgroundColor: Colors.green[300],
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          padding: EdgeInsets.all(10),
+        ),
+      );
     } else {
-      print('Error al enviar la pista');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Error al actualizar la pista'),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
@@ -197,7 +224,7 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.only(bottom: 10, left: 20, right: 20),
               child: ElevatedButton.icon(
                 onPressed: () {
                   _showEditDialog();
@@ -373,7 +400,6 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                   );
                   print(pistaActualizada);
                   sendPista(pistaActualizada);
-
                   Navigator.of(context).pop();
                 }
               },

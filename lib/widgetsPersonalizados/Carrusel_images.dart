@@ -12,8 +12,8 @@ class carrusel_images extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final copiedImages =
-        List<dynamic>.from(images); // Hacer una copia de la lista
+    // final copiedImages =
+    //     List<dynamic>.from(images); // Hacer una copia de la lista
 
     return Container(
       height: 250.0,
@@ -21,7 +21,8 @@ class carrusel_images extends StatelessWidget {
       color: Colors.white70,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
-          final image = copiedImages[index]; // Utilizar la lista copiada
+          // final image = copiedImages[index]; // Utilizar la lista copiada
+          final image = images[index];
           return ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: CachedNetworkImage(
@@ -30,7 +31,7 @@ class carrusel_images extends StatelessWidget {
             ),
           );
         },
-        itemCount: copiedImages.length == 0 ? 1 : copiedImages.length,
+        itemCount: images.length,
         pagination: SwiperPagination(),
         control: SwiperControl(),
         viewportFraction: 0.95,

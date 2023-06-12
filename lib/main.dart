@@ -1,4 +1,5 @@
 import 'package:flutter_app_final_iferrerf/pages/admin/menu/admin_menu.dart';
+import 'package:flutter_app_final_iferrerf/theme/app_theme.dart';
 import 'pages/imports.dart';
 import 'pages/pages.dart';
 
@@ -10,19 +11,14 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-final ThemeData adminTheme = ThemeData(
-  primarySwatch: Colors.green,
-);
-
-final ThemeData defaultTheme = ThemeData(
-  primarySwatch: Colors.lightBlue,
-);
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ThemeData defaultTheme = AppTheme().defaultTheme;
+    ThemeData adminTheme = AppTheme().adminTheme;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

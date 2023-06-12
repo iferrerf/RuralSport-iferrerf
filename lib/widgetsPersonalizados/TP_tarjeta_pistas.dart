@@ -4,9 +4,11 @@ class TP_tarjeta_pistas extends StatelessWidget {
   const TP_tarjeta_pistas({
     Key? key,
     required this.pistaInfo,
+    required this.theme,
   }) : super(key: key);
 
   final Map<String, dynamic> pistaInfo;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,8 @@ class TP_tarjeta_pistas extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      shadowColor: Colors.blue.shade800,
+      shadowColor: Colors.grey.shade600,
+      borderOnForeground: true,
       elevation: 10,
       child: Column(
         children: [
@@ -29,7 +32,7 @@ class TP_tarjeta_pistas extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           Container(
-            color: Colors.amber.shade300,
+            color: theme.primaryColor,
             alignment: AlignmentDirectional.centerEnd,
             padding: const EdgeInsets.all(10.0),
             child: Center(
@@ -37,16 +40,22 @@ class TP_tarjeta_pistas extends StatelessWidget {
                 children: [
                   Text(
                     nombre,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white70),
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Divider(
                       thickness: 2.0,
-                      color: Colors.black,
+                      color: Colors.white70,
                     ),
                   ),
-                  Text(localidad),
+                  Text(
+                    localidad,
+                    style: TextStyle(color: Colors.white70),
+                  ),
                 ],
               ),
             ),

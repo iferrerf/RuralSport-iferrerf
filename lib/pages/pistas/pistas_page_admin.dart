@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app_final_iferrerf/theme/app_theme.dart';
 import 'package:flutter_app_final_iferrerf/widgetsPersonalizados/TP_detalle_pistas_admin.dart';
 
 import 'package:http/http.dart' as http;
@@ -44,6 +45,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData adminTheme = AppTheme().adminTheme;
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -78,6 +80,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
                   },
                   child: TP_tarjeta_pistas(
                     pistaInfo: pista.toJson(),
+                    theme: adminTheme,
                   ),
                 );
               },
