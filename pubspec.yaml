@@ -74,6 +74,11 @@ dependencies:
   #Manejo de APIs
   http: ^0.13.6
 
+  # Coger imagenes de galeria
+  image_picker: ^0.8.8
+
+  # Cargar imagenes de internet
+  cached_network_image: ^3.0.0
 
 
 dev_dependencies:
