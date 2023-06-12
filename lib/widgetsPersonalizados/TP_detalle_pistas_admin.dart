@@ -1,7 +1,12 @@
-import 'dart:io';
-import 'package:card_swiper/card_swiper.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/pista.dart';
+import 'Carrusel_images.dart';
+import 'ImagenesSelec_miniatura.dart';
+import 'infoCard_detalle_pistas.dart';
 
 class TP_detalle_pistas_admin extends StatefulWidget {
   TP_detalle_pistas_admin({
@@ -22,11 +27,14 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
   final TextEditingController _lugarController = TextEditingController();
   final TextEditingController _horarioController = TextEditingController();
   final TextEditingController _temporadaController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _anoConstruccionController =
       TextEditingController();
   final TextEditingController _estadoController = TextEditingController();
 
   List<dynamic> _images = [];
+
+  String _id = "";
 
   final List<String> opcionesTemporada = [
     'Todo el año',
@@ -41,12 +49,10 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
     'Poco cuidado'
   ];
 
-  // String selectedTemporada = "";
-  // String selectedEstado = "";
-
   @override
   void initState() {
     super.initState();
+    _id = widget.pistaInfo['_id'];
     _nombreController.text = widget.pistaInfo['nombre'] ?? '';
     _lugarController.text = widget.pistaInfo['lugar'] ?? '';
     _horarioController.text = widget.pistaInfo['horario'] ?? '';
@@ -54,8 +60,21 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
     _images = List<dynamic>.from(widget.pistaInfo['images'] ?? []);
     _anoConstruccionController.text = widget.pistaInfo['añoConstruccion'] ?? '';
     _estadoController.text = widget.pistaInfo['estado'] ?? '';
-    // selectedEstado = _estadoController.text;
-    // selectedTemporada = _temporadaController.text;
+    _descripcionController.text = widget.pistaInfo['descripcion'] ?? '';
+  }
+
+  Future<void> sendPista(Pista pista) async {
+    final response = await http.put(
+      Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(pista.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      print('Pista actualizada correctamente');
+    } else {
+      print('Error al enviar la pista');
+    }
   }
 
   @override
@@ -75,16 +94,17 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _swiper(_images),
+            carrusel_images(images: _images),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Card(
-                elevation: 4,
+                elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.only(
+                      left: 20, top: 10, right: 20, bottom: 10),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -102,35 +122,69 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                                 ),
                               ),
                               SizedBox(height: 16),
-                              _buildInfoRow(
-                                'Municipio:',
-                                _lugarController.text,
-                                Colors.black,
-                                Colors.green,
-                              ),
-                              _buildInfoRow(
-                                'Temporada:',
-                                _temporadaController.text,
-                                Colors.black,
-                                Colors.green,
-                              ),
-                              _buildInfoRow(
-                                'Horario:',
-                                _horarioController.text,
-                                Colors.black,
-                                Colors.green,
-                              ),
-                              _buildInfoRow(
-                                'Año Construcción:',
-                                _anoConstruccionController.text,
-                                Colors.black,
-                                Colors.green,
-                              ),
-                              _buildInfoRow(
-                                'Estado:',
-                                _estadoController.text,
-                                Colors.black,
-                                Colors.green,
+                              buildInfoRow(
+                                  title: 'Municipio:',
+                                  data: _lugarController.text,
+                                  titleColor: Colors.black,
+                                  dataColor: Colors.green),
+                              buildInfoRow(
+                                  title: 'Temporada:',
+                                  data: _temporadaController.text,
+                                  titleColor: Colors.black,
+                                  dataColor: Colors.green),
+                              buildInfoRow(
+                                  title: 'Horario:',
+                                  data: _horarioController.text,
+                                  titleColor: Colors.black,
+                                  dataColor: Colors.green),
+                              buildInfoRow(
+                                  title: 'Año Construcción:',
+                                  data: _anoConstruccionController.text,
+                                  titleColor: Colors.black,
+                                  dataColor: Colors.green),
+                              buildInfoRow(
+                                  title: 'Estado:',
+                                  data: _estadoController.text,
+                                  titleColor: Colors.black,
+                                  dataColor: Colors.green),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Descripción:",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        _descripcionController.text,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -143,7 +197,7 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(5),
               child: ElevatedButton.icon(
                 onPressed: () {
                   _showEditDialog();
@@ -163,80 +217,10 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
     );
   }
 
-  Widget _buildInfoRow(
-    String title,
-    String data,
-    Color titleColor,
-    Color dataColor,
-  ) {
-    // if (title == 'Temporada') {
-    //   data = selectedTemporada.isNotEmpty ? selectedTemporada : data;
-    // } else if (title == 'Estado') {
-    //   data = selectedEstado.isNotEmpty ? selectedEstado : data;
-    // }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: titleColor,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              data,
-              style: TextStyle(
-                fontSize: 16,
-                color: dataColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _swiper(List<dynamic> images) {
-    final copiedImages =
-        List<dynamic>.from(images); // Hacer una copia de la lista
-
-    return Container(
-      height: 250.0,
-      margin: EdgeInsets.only(top: 10),
-      color: Colors.white70,
-      child: Swiper(
-        itemBuilder: (BuildContext context, int index) {
-          final image = copiedImages[index]; // Utilizar la lista copiada
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: CachedNetworkImage(
-              imageUrl: image,
-              fit: BoxFit.cover,
-            ),
-          );
-        },
-        itemCount: copiedImages.length == 0 ? 1 : copiedImages.length,
-        pagination: SwiperPagination(),
-        control: SwiperControl(),
-        viewportFraction: 0.95,
-        scale: 0.7,
-      ),
-    );
-  }
-
   Future<void> _showEditDialog() async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return StatefulBuilder(
-        //   builder: (BuildContext context, StateSetter setState) {
         return AlertDialog(
           title: Text('Editar Datos'),
           content: SingleChildScrollView(
@@ -329,6 +313,16 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                     return null;
                   },
                 ),
+                TextFormField(
+                  controller: _descripcionController,
+                  decoration: InputDecoration(labelText: 'Descripción'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor, ingresa una descripción';
+                    }
+                    return null;
+                  },
+                ),
                 ElevatedButton(
                   onPressed: () {
                     _pickImage().then((imageUrl) {
@@ -342,7 +336,7 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                   child: Text('Seleccionar Imagen'),
                 ),
                 SizedBox(height: 16),
-                _buildSelectedImages(setState),
+                imagenesSelec_miniatura(images: _images, setState: setState),
               ],
             ),
           ),
@@ -366,6 +360,20 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
+                  Pista pistaActualizada = Pista(
+                    id: _id,
+                    nombre: _nombreController.text,
+                    localidad: _lugarController.text,
+                    horario: _horarioController.text,
+                    temporada: _temporadaController.text,
+                    anoConstruccion: _anoConstruccionController.text,
+                    estado: _estadoController.text,
+                    images: _images,
+                    descripcion: _descripcionController.text,
+                  );
+                  print(pistaActualizada);
+                  sendPista(pistaActualizada);
+
                   Navigator.of(context).pop();
                 }
               },
@@ -375,8 +383,6 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
         );
       },
     );
-    //   },
-    // );
   }
 
   Future<String?> _pickImage() async {
@@ -413,63 +419,6 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildSelectedImages(StateSetter setState) {
-    final reversedImages = _images.reversed.toList(); // Revertir la lista
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Imágenes Seleccionadas:',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (var index = 0; index < reversedImages.length; index++)
-                Stack(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      margin: EdgeInsets.only(right: 8),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(reversedImages[index]),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _images.removeAt(_images.length -
-                                1 -
-                                index); // Eliminar la imagen de la lista
-                          });
-                        },
-                        child: Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

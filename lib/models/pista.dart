@@ -1,16 +1,16 @@
 class Pista {
-  final String id;
+  final String? id;
   final String nombre;
   final String localidad;
   final String horario;
   final String temporada;
-  final List<String> images;
+  final List<dynamic> images;
   final String anoConstruccion;
   final String estado;
   final String descripcion;
 
   Pista({
-    required this.id,
+    this.id,
     required this.nombre,
     required this.localidad,
     required this.horario,
