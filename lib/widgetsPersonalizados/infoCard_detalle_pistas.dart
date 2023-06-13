@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class buildInfoRow extends StatelessWidget {
-  const buildInfoRow({
+class InfoCard_detalle_pistas extends StatelessWidget {
+  const InfoCard_detalle_pistas({
     super.key,
     required this.title,
     required this.data,

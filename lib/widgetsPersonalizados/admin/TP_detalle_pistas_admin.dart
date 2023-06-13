@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_app_final_iferrerf/models/pista.dart';
+import 'package:flutter_app_final_iferrerf/widgetsPersonalizados/Carrusel_images.dart';
+import 'package:flutter_app_final_iferrerf/widgetsPersonalizados/ImagenesSelec_miniatura.dart';
+import 'package:flutter_app_final_iferrerf/widgetsPersonalizados/infoCard_detalle_pistas.dart';
 
-import '../models/pista.dart';
-import 'Carrusel_images.dart';
-import 'ImagenesSelec_miniatura.dart';
-import 'infoCard_detalle_pistas.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TP_detalle_pistas_admin extends StatefulWidget {
   TP_detalle_pistas_admin({
@@ -121,7 +120,7 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            carrusel_images(images: _images),
+            Carrusel_images(images: _images),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Card(
@@ -149,27 +148,27 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                                 ),
                               ),
                               SizedBox(height: 16),
-                              buildInfoRow(
+                              InfoCard_detalle_pistas(
                                   title: 'Municipio:',
                                   data: _lugarController.text,
                                   titleColor: Colors.black,
                                   dataColor: Colors.green),
-                              buildInfoRow(
+                              InfoCard_detalle_pistas(
                                   title: 'Temporada:',
                                   data: _temporadaController.text,
                                   titleColor: Colors.black,
                                   dataColor: Colors.green),
-                              buildInfoRow(
+                              InfoCard_detalle_pistas(
                                   title: 'Horario:',
                                   data: _horarioController.text,
                                   titleColor: Colors.black,
                                   dataColor: Colors.green),
-                              buildInfoRow(
+                              InfoCard_detalle_pistas(
                                   title: 'Año Construcción:',
                                   data: _anoConstruccionController.text,
                                   titleColor: Colors.black,
                                   dataColor: Colors.green),
-                              buildInfoRow(
+                              InfoCard_detalle_pistas(
                                   title: 'Estado:',
                                   data: _estadoController.text,
                                   titleColor: Colors.black,
@@ -363,7 +362,7 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                   child: Text('Seleccionar Imagen'),
                 ),
                 SizedBox(height: 16),
-                imagenesSelec_miniatura(images: _images, setState: setState),
+                ImagenesSelec_miniatura(images: _images, setState: setState),
               ],
             ),
           ),

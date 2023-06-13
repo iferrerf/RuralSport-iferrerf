@@ -1,7 +1,10 @@
-import 'package:flutter_app_final_iferrerf/pages/pistas/pistas_page.dart';
-import 'package:flutter_app_final_iferrerf/pages/mapa/mapa_page.dart';
-import 'package:flutter_app_final_iferrerf/pages/imports.dart';
-import '../reservas/reservas_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app_final_iferrerf/pages/client/pistas/pistas_page.dart';
+import 'package:flutter_app_final_iferrerf/pages/client/mapa/mapa_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../reservas/reservas_page.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 // Traemos de Firebase el usuario registrado
 FirebaseAuth _auth = FirebaseAuth.instance;

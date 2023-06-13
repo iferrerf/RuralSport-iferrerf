@@ -1,6 +1,13 @@
-import '../admin/menu/admin_menu.dart';
-import '../imports.dart';
-import '../pages.dart';
+import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:flutter_app_final_iferrerf/pages/admin/menu/admin_menu.dart';
+import 'package:flutter_app_final_iferrerf/pages/client/menu/drawer.dart';
 
 class Login extends StatelessWidget {
   @override

@@ -1,6 +1,10 @@
-import '../imports.dart';
-import '../pages.dart';
+import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+
+import 'package:flutter_app_final_iferrerf/models/reserva.dart';
 
 const COLLECTION_NAME = 'reservas';
 
@@ -96,6 +100,7 @@ class _ReservasPageState extends State<ReservasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.all(30),

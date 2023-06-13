@@ -26,7 +26,7 @@ class AppTheme {
     ),
     primaryColor: Color(0xFF509A66),
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: Color(0xFFCD3324),
+      backgroundColor: Color.fromARGB(255, 56, 108, 71),
       contentTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 16,

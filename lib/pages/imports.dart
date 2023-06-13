@@ -1,9 +1,0 @@
-export 'package:animated_splash_screen/animated_splash_screen.dart';
-export 'package:firebase_auth/firebase_auth.dart';
-export 'package:firebase_core/firebase_core.dart';
-export 'package:flutter/material.dart';
-export 'package:cloud_firestore/cloud_firestore.dart';
-export 'package:google_sign_in/google_sign_in.dart';
-export 'package:flutter_login/flutter_login.dart';
-export 'package:font_awesome_flutter/font_awesome_flutter.dart';
-export 'package:flutter_app_final_iferrerf/firebase_options.dart';

@@ -2,21 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app_final_iferrerf/theme/app_theme.dart';
-import 'package:flutter_app_final_iferrerf/widgetsPersonalizados/TP_detalle_pistas_admin.dart';
+import 'package:flutter_app_final_iferrerf/widgetsPersonalizados/client/TP_detalle_pistas.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../../models/pista.dart';
-import '../../widgetsPersonalizados/TP_tarjeta_pistas.dart';
+import '../../../models/pista.dart';
+import '../../../widgetsPersonalizados/TP_tarjeta_pistas.dart';
 
-class PistasPageAdmin extends StatefulWidget {
-  const PistasPageAdmin({Key? key});
+class PistasPage extends StatefulWidget {
+  const PistasPage({Key? key});
 
   @override
-  State<PistasPageAdmin> createState() => _PistasPageAdminState();
+  State<PistasPage> createState() => _PistasPageState();
 }
 
-class _PistasPageAdminState extends State<PistasPageAdmin> {
+class _PistasPageState extends State<PistasPage> {
   List<Pista> pistas = [];
   bool isLoading =
       true; //comprobamos si se está cargando la data de las pistas o no
@@ -45,7 +45,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData adminTheme = AppTheme().adminTheme;
+    ThemeData defaultTheme = AppTheme().defaultTheme;
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -72,7 +72,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TP_detalle_pistas_admin(
+                        builder: (context) => TP_detalle_pistas(
                           pistaInfo: pista.toJson(),
                         ),
                       ),
@@ -80,7 +80,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
                   },
                   child: TP_tarjeta_pistas(
                     pistaInfo: pista.toJson(),
-                    theme: adminTheme,
+                    theme: defaultTheme,
                   ),
                 );
               },

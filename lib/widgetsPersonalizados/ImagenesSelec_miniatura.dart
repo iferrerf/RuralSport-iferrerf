@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class imagenesSelec_miniatura extends StatelessWidget {
-  const imagenesSelec_miniatura({
+class ImagenesSelec_miniatura extends StatelessWidget {
+  const ImagenesSelec_miniatura({
     super.key,
     required List images,
     required this.setState,

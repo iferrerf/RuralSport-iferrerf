@@ -48,4 +48,17 @@ class Pista {
       "descripcion": descripcion,
     };
   }
+
+  Map<String, dynamic> toJsonCreate() {
+    return {
+      "nombre": nombre,
+      "lugar": localidad,
+      "horario": horario,
+      "temporada": temporada,
+      "images": images,
+      "añoConstruccion": anoConstruccion,
+      "estado": estado,
+      "descripcion": descripcion,
+    };
+  }
 }

@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 
-class carrusel_images extends StatelessWidget {
-  const carrusel_images({
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
+
+class Carrusel_images extends StatelessWidget {
+  const Carrusel_images({
     super.key,
     required this.images,
   });
@@ -12,16 +13,12 @@ class carrusel_images extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final copiedImages =
-    //     List<dynamic>.from(images); // Hacer una copia de la lista
-
     return Container(
       height: 250.0,
       margin: EdgeInsets.only(top: 10),
       color: Colors.white70,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
-          // final image = copiedImages[index]; // Utilizar la lista copiada
           final image = images[index];
           return ClipRRect(
             borderRadius: BorderRadius.circular(10.0),

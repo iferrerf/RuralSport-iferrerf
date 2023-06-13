@@ -1,7 +1,10 @@
-import 'package:flutter_app_final_iferrerf/pages/calendario/Calendar.dart';
+import 'package:flutter/material.dart';
 
-import '../imports.dart';
-import '../pages.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flutter_app_final_iferrerf/pages/admin/calendario/Calendar.dart';
+import 'package:flutter_app_final_iferrerf/models/reserva.dart';
 
 const COLLECTION_NAME = 'reservas';
 

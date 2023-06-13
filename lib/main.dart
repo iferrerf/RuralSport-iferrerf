@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app_final_iferrerf/firebase_options.dart';
 import 'package:flutter_app_final_iferrerf/pages/admin/menu/admin_menu.dart';
+import 'package:flutter_app_final_iferrerf/pages/client/menu/drawer.dart';
+import 'package:flutter_app_final_iferrerf/pages/login/login.dart';
 import 'package:flutter_app_final_iferrerf/theme/app_theme.dart';
-import 'pages/imports.dart';
-import 'pages/pages.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
