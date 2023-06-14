@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_final_iferrerf/theme/app_theme.dart';
 
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import 'package:flutter_app_final_iferrerf/theme/app_theme.dart';
 import 'package:flutter_app_final_iferrerf/models/pista.dart';
 import 'package:flutter_app_final_iferrerf/models/reserva.dart';
 
 const COLLECTION_NAME = 'reservas';
 
-class ReservasPage extends StatefulWidget {
-  const ReservasPage({Key? key}) : super(key: key);
+class ReservasAdminPage extends StatefulWidget {
+  const ReservasAdminPage({Key? key}) : super(key: key);
 
   @override
-  State<ReservasPage> createState() => _ReservasPageState();
+  State<ReservasAdminPage> createState() => _ReservasAdminPageState();
 }
 
-class _ReservasPageState extends State<ReservasPage> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  User? user;
-  String? email;
-
+class _ReservasAdminPageState extends State<ReservasAdminPage> {
   List<Reserva> listaReservas = [];
   List<Pista> pistas = [];
   Pista? pistaSeleccionada;
@@ -41,9 +36,6 @@ class _ReservasPageState extends State<ReservasPage> {
   @override
   void initState() {
     super.initState();
-    _auth = FirebaseAuth.instance;
-    user = _auth.currentUser;
-    email = user?.email.toString();
 
     selectedDate = DateTime.now();
     selectedTimeStart = TimeOfDay.now();
@@ -160,7 +152,7 @@ class _ReservasPageState extends State<ReservasPage> {
         actions: [
           IconButton(
             onPressed: () {
-              // Abro el Dialogo para introducir los datos
+              //Abro el Dialogo para introducir los datos
               showItemDialog();
             },
             icon: const Icon(
@@ -176,156 +168,116 @@ class _ReservasPageState extends State<ReservasPage> {
           // Determinar el color de fondo de la tarjeta
           Color? cardColor = index % 2 == 0
               ? Colors.white
-              : AppTheme().defaultTheme.primaryColor;
+              : AppTheme().adminTheme.primaryColor;
+
           Color? textColor =
-              index % 2 == 0 ? Colors.blueGrey : Colors.grey[200];
+              index % 2 == 0 ? Colors.lightGreen[800] : Colors.grey[200];
 
-          bool isCurrentUserReserva =
-              FirebaseAuth.instance.currentUser?.email ==
-                  listaReservas[index].usuario;
-
-          return isCurrentUserReserva
-              ? Slidable(
-                  endActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    children: [
-                      SlidableAction(
-                        onPressed: (context) {
-                          eliminarReserva(listaReservas[index].id!);
-                          // Muestro un Snackbar diciendo que el producto se ha eliminado
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: Colors.redAccent,
-                              content: Text(
-                                  'Se ha eliminado la reserva correctamente'),
-                            ),
-                          );
-                        },
-                        backgroundColor: const Color(0xFFFE4A49),
-                        foregroundColor: Colors.white,
-                        icon: Icons.delete,
-                        label: 'Delete',
+          return Slidable(
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    eliminarReserva(listaReservas[index].id!);
+                    // Muestro un Snackbar diciendo que el producto se ha eliminado
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.redAccent,
+                        content:
+                            Text('Se ha eliminado la reserva correctamente'),
                       ),
-                    ],
-                  ),
-                  child: _buildCard(
-                    cardColor,
-                    textColor,
-                    listaReservas[index],
-                  ),
-                )
-              : _buildCard(
-                  cardColor,
-                  textColor,
-                  listaReservas[index],
-                );
-        },
-      ),
-    );
-  }
-
-  Widget _buildCard(Color? cardColor, Color? textColor, Reserva reserva) {
-    return Card(
-      color: cardColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        onTap: () {
-          // Obtener el usuario actualmente logueado con Firebase
-          User? currentUser = FirebaseAuth.instance.currentUser;
-
-          // Validar si el usuario actual coincide con el usuario de la reserva
-          if (currentUser != null && currentUser.email == reserva.usuario) {
-            // El usuario puede actualizar o eliminar la reserva
-            showItemDialogUpdate(
-              reserva.id!,
-              reserva.usuario,
-              reserva.dia,
-              reserva.horaInicio,
-              reserva.horaFin,
-            );
-          } else {
-            // El usuario no puede actualizar o eliminar la reserva
-            // showDialog(
-            //   context: context,
-            //   builder: (context) {
-            //     return AlertDialog(
-            //       title: Text('Acceso denegado'),
-            //       content: Text(
-            //           'No tienes permiso para actualizar o eliminar esta reserva.'),
-            //       actions: [
-            //         TextButton(
-            //           onPressed: () => Navigator.pop(context),
-            //           child: Text('Aceptar'),
-            //         ),
-            //       ],
-            //     );
-            //   },
-            // );
-            return;
-          }
-        },
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              '${reserva.pista!.nombre}, ${reserva.pista!.localidad}',
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
-            ),
-            SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: 16, color: Colors.red),
-                SizedBox(width: 4),
-                Text(
-                  reserva.dia,
-                  style: TextStyle(fontSize: 14, color: textColor),
+                    );
+                  },
+                  backgroundColor: const Color(0xFFFE4A49),
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
                 ),
               ],
             ),
-            SizedBox(height: 12),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.access_time, size: 16, color: Colors.blue),
-                SizedBox(width: 4),
-                Text(
-                  '${reserva.horaInicio} - ${reserva.horaFin}',
-                  style: TextStyle(fontSize: 14, color: textColor),
+            child: Card(
+              color: cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: ListTile(
+                onTap: () {
+                  showItemDialogUpdate(
+                    listaReservas[index].id!,
+                    listaReservas[index].usuario,
+                    listaReservas[index].dia,
+                    listaReservas[index].horaInicio,
+                    listaReservas[index].horaFin,
+                  );
+                },
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8),
+                    Text(
+                      '${listaReservas[index].pista!.nombre}, ${listaReservas[index].pista!.localidad}',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: textColor),
+                    ),
+                    SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(Icons.calendar_today, size: 16, color: Colors.red),
+                        SizedBox(width: 4),
+                        Text(
+                          listaReservas[index].dia,
+                          style: TextStyle(fontSize: 14, color: textColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  Icon(Icons.person, size: 16, color: Colors.blueGrey[300]),
-                  SizedBox(width: 4),
-                  Text(
-                    '${reserva.usuario}',
-                    style: TextStyle(fontSize: 14, color: textColor),
-                  ),
-                ],
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.access_time,
+                            size: 16, color: Colors.lightBlue),
+                        SizedBox(width: 4),
+                        Text(
+                          '${listaReservas[index].horaInicio} - ${listaReservas[index].horaFin}',
+                          style: TextStyle(fontSize: 14, color: textColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person,
+                              size: 16, color: Colors.blueGrey[200]),
+                          SizedBox(width: 4),
+                          Text(
+                            '${listaReservas[index].usuario}',
+                            style: TextStyle(fontSize: 14, color: textColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
   void showItemDialog() {
-    var usuarioController = TextEditingController(text: email);
-
+    var usuarioController = TextEditingController(text: "@gmail.com");
     showDialog(
       context: context,
       builder: (context) {
@@ -354,7 +306,6 @@ class _ReservasPageState extends State<ReservasPage> {
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Email del usuario'),
                   controller: usuarioController,
-                  enabled: false,
                   style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 20),

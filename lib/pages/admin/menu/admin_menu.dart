@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'package:flutter_app_final_iferrerf/pages/admin/reservas/reservas_admin_page.dart';
 import 'package:flutter_app_final_iferrerf/pages/admin/pistas/pistas_page_admin.dart';
-import 'package:flutter_app_final_iferrerf/pages/reservas/todas_reservas.dart';
-import 'package:flutter_app_final_iferrerf/pages/admin/calendario/eventos.dart';
-import 'package:flutter_app_final_iferrerf/pages/admin/calendario/reservas_page_admin.dart';
 
 // Traemos de Firebase el usuario registrado
 FirebaseAuth _auth = FirebaseAuth.instance;
@@ -43,7 +41,7 @@ class _Admin_MenuState extends State<Admin_Menu> {
                 style: TextStyle(color: Colors.white, fontSize: 25)),
           ),
         ),
-        body: ReservasPageAdmin(),
+        body: ReservasAdminPage(),
         drawer: Drawer(
           backgroundColor: Colors.lightGreen.shade200,
           child: ListView(
@@ -54,7 +52,7 @@ class _Admin_MenuState extends State<Admin_Menu> {
 
               // Elemento de la lista clicable para acceder a la pagina de lista de pistas
               _buildDrawerItem(
-                  icon: Icons.sports_tennis,
+                  icon: Icons.post_add_rounded,
                   text: 'Pistas',
                   onTap: () => {
                         Navigator.push(
@@ -63,27 +61,14 @@ class _Admin_MenuState extends State<Admin_Menu> {
                               builder: (context) => PistasPageAdmin(),
                             ))
                       }),
-
-              // Elemento de la lista clicable para acceder a la pagina de reservas (calendario y eventos)
-              _buildDrawerItem(
-                  icon: Icons.post_add_outlined,
-                  text: 'Eventos',
-                  onTap: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EventosPage(),
-                            ))
-                      }),
-
               _buildDrawerItem(
                   icon: Icons.admin_panel_settings_outlined,
-                  text: 'Panel Administracion',
+                  text: 'Reservas',
                   onTap: () => {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TodasReservasPage(),
+                              builder: (context) => ReservasAdminPage(),
                             ))
                       }),
 

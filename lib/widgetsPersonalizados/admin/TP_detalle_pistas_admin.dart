@@ -62,47 +62,6 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
     _descripcionController.text = widget.pistaInfo['descripcion'] ?? '';
   }
 
-  Future<void> sendPista(Pista pista) async {
-    final response = await http.put(
-      Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(pista.toJson()),
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Pista actualizada correctamente'),
-            ],
-          ),
-          backgroundColor: Colors.green[300],
-          duration: Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-          padding: EdgeInsets.all(10),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Error al actualizar la pista'),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,10 +196,114 @@ class _TP_detalle_pistas_adminState extends State<TP_detalle_pistas_admin> {
                 ),
               ),
             ),
+            // Container(
+            //   width: double.infinity,
+            //   padding: EdgeInsets.only(bottom: 10, left: 20, right: 20),
+            //   child: ElevatedButton.icon(
+            //     onPressed: () {
+            //       _deletePista();
+            //     },
+            //     icon: Icon(Icons.delete),
+            //     label: Text('Eliminar pista'),
+            //     style: ElevatedButton.styleFrom(
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(16.0),
+            //       ),
+            //       backgroundColor: Colors.red,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> sendPista(Pista pista) async {
+    final response = await http.put(
+      Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(pista.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Pista actualizada correctamente'),
+            ],
+          ),
+          backgroundColor: Colors.green[300],
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          padding: EdgeInsets.all(10),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Error al actualizar la pista'),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  Future<void> _deletePista() async {
+    final url =
+        Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas/$_id');
+    final response = await http.delete(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    print(response.headers);
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Pista eliminada correctamente'),
+            ],
+          ),
+          backgroundColor: Colors.green[300],
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          padding: EdgeInsets.all(10),
+        ),
+      );
+      final nuevaPistaResponse = Pista.fromJson(jsonDecode(response.body));
+      Navigator.pop(context, nuevaPistaResponse);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Error al eliminar la pista'),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Future<void> _showEditDialog() async {

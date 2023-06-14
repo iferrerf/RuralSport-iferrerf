@@ -90,8 +90,8 @@ class _ReservasPageAdminState extends State<ReservasPageAdmin> {
               id: reserva.id,
               usuario: reserva['usuario'],
               dia: reserva['dia'],
-              hora: reserva['hora'],
-              tiempo: reserva['tiempo'],
+              horaInicio: reserva['horaInicio'],
+              horaFin: reserva['horaFin'],
             ))
         .toList();
 
@@ -134,7 +134,7 @@ class _ReservasPageAdminState extends State<ReservasPageAdmin> {
               children: [
                 SlidableAction(
                   onPressed: (context) {
-                    eliminarReserva(listaReservas[index].id);
+                    eliminarReserva(listaReservas[index].id!);
                     // Muestro un Snackbar diciendo que el producto se ha eliminado
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         backgroundColor: Colors.redAccent,
@@ -151,14 +151,15 @@ class _ReservasPageAdminState extends State<ReservasPageAdmin> {
             child: ListTile(
               onTap: () {
                 showItemDialogUpdate(
-                    listaReservas[index].id,
-                    listaReservas[index].usuario,
-                    listaReservas[index].dia,
-                    listaReservas[index].hora,
-                    listaReservas[index].tiempo);
+                  listaReservas[index].id!,
+                  listaReservas[index].usuario,
+                  listaReservas[index].dia,
+                  listaReservas[index].horaInicio,
+                  listaReservas[index].horaFin,
+                );
               },
               title: Text(listaReservas[index].dia),
-              subtitle: Text(listaReservas[index].hora),
+              subtitle: Text(listaReservas[index].horaInicio),
             ),
           );
         },
@@ -322,7 +323,11 @@ class _ReservasPageAdminState extends State<ReservasPageAdmin> {
 
   void addReserva(String usuario, String dia, String hora, String tiempo) {
     Reserva reserva = Reserva(
-        id: "id", usuario: usuario, dia: dia, hora: hora, tiempo: tiempo);
+        id: "id",
+        usuario: usuario,
+        dia: dia,
+        horaFin: hora,
+        horaInicio: tiempo);
 
     FirebaseFirestore.instance
         .collection(COLLECTION_NAME)

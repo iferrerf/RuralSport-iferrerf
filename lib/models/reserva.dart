@@ -1,37 +1,43 @@
 import 'dart:convert';
 
+import 'package:flutter_app_final_iferrerf/models/pista.dart';
+
 Reserva pistaFromJson(String str) => Reserva.fromJson(json.decode(str));
 
 String pistaToJson(Reserva data) => json.encode(data.toJson());
 
 class Reserva {
   Reserva({
-    required this.id,
+    this.id,
     required this.usuario,
     required this.dia,
-    required this.hora,
-    required this.tiempo,
+    required this.horaInicio,
+    required this.horaFin,
+    this.pista,
   });
 
-  String id;
+  String? id;
   String usuario;
+  Pista? pista;
   String dia;
-  String hora;
-  String tiempo;
+  String horaInicio;
+  String horaFin;
 
   factory Reserva.fromJson(Map<String, dynamic> json) => Reserva(
         id: json["id"],
         usuario: json["usuario"],
         dia: json["dia"],
-        hora: json["hora"],
-        tiempo: json["tiempo"],
+        horaInicio: json["horaInicio"],
+        horaFin: json["horaFin"],
+        pista: Pista.fromJson(json["pista"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "usuario": usuario,
         "dia": dia,
-        "hora": hora,
-        "tiempo": tiempo,
+        "horaInicio": horaInicio,
+        "horaFin": horaFin,
+        "pista": pista?.toJson(),
       };
 }

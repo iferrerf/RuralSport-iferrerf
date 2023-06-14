@@ -80,6 +80,9 @@ dependencies:
   # Cargar imagenes de internet
   cached_network_image: ^3.0.0
 
+  # DatePikcer
+  flutter_datetime_picker: ^1.5.1
+
 
 dev_dependencies:
   flutter_test:
