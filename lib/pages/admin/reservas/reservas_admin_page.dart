@@ -143,9 +143,12 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.all(30),
-          child: const Text(
-            'Reservas de pistas',
-            style: TextStyle(color: Colors.white),
+          child: Align(
+            alignment: Alignment.center,
+            child: const Text(
+              'Reservas de pistas',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
         elevation: 0,
@@ -278,6 +281,8 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
 
   void showItemDialog() {
     var usuarioController = TextEditingController(text: "@gmail.com");
+    ThemeData adminColor = AppTheme().adminTheme;
+
     showDialog(
       context: context,
       builder: (context) {
@@ -287,6 +292,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: const [
@@ -330,50 +336,107 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
                   menuMaxHeight: 200,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _selectDate(context).then((selectedDate) {
-                      setState(() {
-                        diaSelect = selectedDate;
-                      });
-                    });
-                  },
-                  child: Text(
-                    'Día de la reserva: ${getDiaSemana(selectedDate) + ' ' + DateFormat('yyyy-MM-dd').format(selectedDate)}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Día de la reserva:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        _selectDate(context).then((selectedDate) {
+                          setState(() {
+                            diaSelect = selectedDate;
+                          });
+                        });
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.all(16),
+                        ),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            adminColor.primaryColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.calendar_today),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            '${getDiaSemana(selectedDate)} ${DateFormat('yyyy-MM-dd').format(selectedDate)}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _selectTimeStart(context);
-                  },
-                  child: Text(
-                    'Hora de inicio: ${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                  ),
+                SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hora de inicio:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        _selectTimeStart(context);
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.all(16),
+                        ),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            adminColor.primaryColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.timer_outlined),
+                          SizedBox(width: 10),
+                          Text(
+                            '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    var usuario = usuarioController.text.trim();
-                    var dia = diaSelect!;
-                    var horaInicio =
-                        '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}';
-                    var horaFin =
-                        '${selectedTimeEnd.hour.toString().padLeft(2, '0')}:${selectedTimeEnd.minute.toString().padLeft(2, '0')}';
-                    addReserva(usuario, dia, horaInicio, horaFin);
-                    Navigator.of(context).maybePop();
-                  },
-                  child: const Text('Añadir', style: TextStyle(fontSize: 18)),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
+                SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                    onPressed: () {
+                      var usuario = usuarioController.text.trim();
+                      var dia = diaSelect!;
+                      var horaInicio =
+                          '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}';
+                      var horaFin =
+                          '${selectedTimeEnd.hour.toString().padLeft(2, '0')}:${selectedTimeEnd.minute.toString().padLeft(2, '0')}';
+                      addReserva(usuario, dia, horaInicio, horaFin);
+                      Navigator.of(context).maybePop();
+                    },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.all(16),
+                      ),
+                    ),
+                    child: const Text('Añadir', style: TextStyle(fontSize: 18)),
                   ),
                 ),
               ],
