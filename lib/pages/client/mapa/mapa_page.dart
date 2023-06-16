@@ -166,7 +166,7 @@ class MapPage extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(Icons.location_on),
                         onPressed: () {
-                          Platform.isAndroid
+                          Platform.isIOS
                               ? mostrarAlertaAndroid(
                                   context,
                                   "Padel Iglesuela del Cid",

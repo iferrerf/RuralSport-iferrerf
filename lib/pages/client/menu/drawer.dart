@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_final_iferrerf/pages/client/pistas/pistas_page.dart';
 import 'package:flutter_app_final_iferrerf/pages/client/mapa/mapa_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app_final_iferrerf/pages/reservas/reservas_page.dart';
+import 'package:flutter_app_final_iferrerf/pages/client/reservas/reservas_page.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
