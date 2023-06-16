@@ -30,8 +30,6 @@ class _ReservasPageState extends State<ReservasPage> {
   Pista? pistaSeleccionada;
 
   String? diaSelect;
-  String? horaInicioSelect;
-  String? horaFinSelect;
 
   late DateTime selectedDate;
   late TimeOfDay selectedTimeStart;
@@ -51,6 +49,7 @@ class _ReservasPageState extends State<ReservasPage> {
 
     calculatedTimeEnd = selectedTimeEnd;
 
+    obtenerPistas();
     fetchReservas();
 
     FirebaseFirestore.instance.collection(COLLECTION_NAME).snapshots().listen(
@@ -60,6 +59,7 @@ class _ReservasPageState extends State<ReservasPage> {
     );
   }
 
+// Funcion para seleccionar una fecha con un calendario
   Future<String> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -77,6 +77,7 @@ class _ReservasPageState extends State<ReservasPage> {
         DateFormat('yyyy-MM-dd').format(selectedDate);
   }
 
+// Funcion para seleccionar una hora con un widget Reloj
   Future<void> _selectTimeStart(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -101,6 +102,7 @@ class _ReservasPageState extends State<ReservasPage> {
     mapReservas(listaReservas);
   }
 
+// Metodo para mapear las reservas y actualizar la lista
   void mapReservas(QuerySnapshot<Map<String, dynamic>> _listaReserva) {
     var _list = _listaReserva.docs
         .map((reserva) => Reserva(
@@ -113,13 +115,12 @@ class _ReservasPageState extends State<ReservasPage> {
             ))
         .toList();
 
-    print("_list:  $_list");
-
     setState(() {
       listaReservas = _list;
     });
   }
 
+// Metodo para obtener las pistas de base de datos
   Future<void> obtenerPistas() async {
     try {
       final response = await http
@@ -159,7 +160,6 @@ class _ReservasPageState extends State<ReservasPage> {
           IconButton(
             onPressed: () {
               // Abro el Dialogo para introducir los datos
-              obtenerPistas();
               showItemDialog();
             },
             icon: const Icon(
@@ -190,15 +190,24 @@ class _ReservasPageState extends State<ReservasPage> {
                     children: [
                       SlidableAction(
                         onPressed: (context) {
-                          eliminarReserva(listaReservas[index].id!);
-                          // Muestro un Snackbar diciendo que el producto se ha eliminado
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: Colors.redAccent,
-                              content: Text(
-                                  'Se ha eliminado la reserva correctamente'),
-                            ),
-                          );
+                          try {
+                            eliminarReserva(listaReservas[index].id!);
+                            // Muestro un Snackbar diciendo que el producto se ha eliminado
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text(
+                                    'Se ha eliminado la reserva correctamente'),
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.redAccent,
+                                content: Text('Error al eliminar la reserva'),
+                              ),
+                            );
+                          }
                         },
                         backgroundColor: const Color(0xFFFE4A49),
                         foregroundColor: Colors.white,
@@ -223,6 +232,7 @@ class _ReservasPageState extends State<ReservasPage> {
     );
   }
 
+// Tarjeta con informacion de cada reserva que aparece en la lista
   Widget _buildCard(Color? cardColor, Color? textColor, Reserva reserva) {
     return Card(
       color: cardColor,
@@ -302,6 +312,7 @@ class _ReservasPageState extends State<ReservasPage> {
     );
   }
 
+// Dialogo para crear nueva reserva
   void showItemDialog() {
     var usuarioController = TextEditingController(text: email);
     ThemeData adminColor = AppTheme().defaultTheme;
@@ -439,14 +450,15 @@ class _ReservasPageState extends State<ReservasPage> {
                   alignment: Alignment.center,
                   child: TextButton(
                     onPressed: () {
-                      if (diaSelect != null && horaInicioSelect != null) {
+                      if (diaSelect != null &&
+                          selectedTimeEnd != selectedTimeStart) {
                         var usuario = usuarioController.text.trim();
-                        var dia = diaSelect;
+                        var dia = diaSelect!;
                         var horaInicio =
                             '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}';
                         var horaFin =
                             '${selectedTimeEnd.hour.toString().padLeft(2, '0')}:${selectedTimeEnd.minute.toString().padLeft(2, '0')}';
-                        addReserva(usuario, dia!, horaInicio, horaFin);
+                        addReserva(usuario, dia, horaInicio, horaFin);
                         Navigator.of(context).maybePop();
                       } else {
                         showDialog(
@@ -485,6 +497,7 @@ class _ReservasPageState extends State<ReservasPage> {
     );
   }
 
+// Dialogo para actualizar la reserva
   void showItemDialogUpdate(
     String idDoc,
     String? usuario,
@@ -547,6 +560,7 @@ class _ReservasPageState extends State<ReservasPage> {
     );
   }
 
+// Obtener dia de la semana en texto a partir de una fecha
   String getDiaSemana(DateTime date) {
     final diasSemana = [
       'Lunes',
@@ -561,9 +575,10 @@ class _ReservasPageState extends State<ReservasPage> {
     return diasSemana[diaSemana - 1];
   }
 
+// Calcular tiempo final a partir de tiempo de comenzar
   TimeOfDay _calculateTimeEnd(TimeOfDay selectTime) {
     final minutesPerHour = 60;
-    final minutesToAdd = 30;
+    final minutesToAdd = 90;
 
     final totalMinutes =
         selectTime.hour * minutesPerHour + selectTime.minute + minutesToAdd;
@@ -575,6 +590,7 @@ class _ReservasPageState extends State<ReservasPage> {
     return timeEnd;
   }
 
+// Convertir un string en TimeOfDay
   TimeOfDay _convertStringToTimeOfDay(String timeString) {
     final parts = timeString.split(':');
     final hour = int.parse(parts[0]);
@@ -582,12 +598,14 @@ class _ReservasPageState extends State<ReservasPage> {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
+// Formatear tiempo TimeOfDay en String en formato correcto
   String formatTimeOfDay(TimeOfDay time) {
     final hour = time.hour.toString().padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
   }
 
+// OPERACIONES CON LAS RESERVAS
   void addReserva(
       String usuario, String dia, String horaInicio, String horaFin) {
     if (pistaSeleccionada != null) {

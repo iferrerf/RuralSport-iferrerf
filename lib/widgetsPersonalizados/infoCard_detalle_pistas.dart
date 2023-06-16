@@ -14,6 +14,7 @@ class InfoCard_detalle_pistas extends StatelessWidget {
   final Color titleColor;
   final Color dataColor;
 
+// Widget personalizado para dar estilo a las tarjetas de informacion pistas
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -11,6 +11,7 @@ class Carrusel_images extends StatelessWidget {
 
   final List images;
 
+// Widget personalizado de carrusel de imagenes
   @override
   Widget build(BuildContext context) {
     return Container(

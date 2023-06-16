@@ -1,10 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import '../../../models/pista.dart';
 import '../../../widgetsPersonalizados/ImagenesSelec_miniatura.dart';
-
-import 'package:http/http.dart' as http;
 
 class CreatePistaPage extends StatefulWidget {
   @override
@@ -168,6 +168,7 @@ class _CreatePistaPageState extends State<CreatePistaPage> {
     );
   }
 
+// Metodo que llama al endpoint para añadir la pista creada en base de datos
   void _createPista() async {
     if (_formKey.currentState!.validate()) {
       final nuevaPista = Pista(
@@ -226,6 +227,7 @@ class _CreatePistaPageState extends State<CreatePistaPage> {
     }
   }
 
+// Dialogo para agregar imagenes a la nueva pista
   void _alertDialog_image() async {
     final imageUrl = await showDialog<String>(
       context: context,

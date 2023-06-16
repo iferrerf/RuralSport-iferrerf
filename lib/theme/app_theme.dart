@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+// Tema personalizado
 class AppTheme {
+  // Tema de diseño para la parte de admin
   final ThemeData adminTheme = ThemeData(
     primarySwatch: MaterialColor(0xFF509A66, {
       50: Color(0xFFD7DBA9),
@@ -34,6 +36,7 @@ class AppTheme {
     ),
   );
 
+// Tema de diseño para la parte de cliente
   final ThemeData defaultTheme = ThemeData(
     primarySwatch: MaterialColor(0xFF238CA9, {
       50: Color(0xFFDCE2C6),

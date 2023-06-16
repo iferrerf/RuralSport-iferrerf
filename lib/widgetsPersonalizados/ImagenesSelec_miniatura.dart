@@ -10,10 +10,10 @@ class ImagenesSelec_miniatura extends StatelessWidget {
   final List _images;
   final StateSetter setState;
 
+// Widget de pequeña imagen con icono eliminar en la esquina superior izquierda
   @override
   Widget build(BuildContext context) {
     final reversedImages = _images.reversed.toList(); // Revertir la lista
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

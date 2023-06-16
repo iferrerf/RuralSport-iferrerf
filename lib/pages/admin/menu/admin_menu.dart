@@ -99,6 +99,7 @@ class _Admin_MenuState extends State<Admin_Menu> {
   }
 }
 
+// Widget que representa la cabecera del menu
 Widget _buildDrawerHeader(String fotoUrl, String email) {
   return DrawerHeader(
     margin: EdgeInsets.zero,
@@ -132,6 +133,7 @@ Widget _buildDrawerHeader(String fotoUrl, String email) {
   );
 }
 
+// Widget que representa cada elemento del menu
 Widget _buildDrawerItem(
     {required IconData icon,
     required String text,

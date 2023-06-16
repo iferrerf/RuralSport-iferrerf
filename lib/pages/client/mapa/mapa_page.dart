@@ -17,6 +17,7 @@ final zoom = LatLng(40.547240, -0.348118);
 class MapPage extends StatelessWidget {
   MapPage({super.key});
 
+// Informacion de los puntos del mapa
   final String textoPoliCtvj = "C.Garcia Valiño, 44140 Cantavieja, Teruel";
   final String textoTenisCtvj = "Las piscinas, 44140 Cantavieja, Teruel";
   final String textoPoliIglesuela =
@@ -26,6 +27,7 @@ class MapPage extends StatelessWidget {
   final String textoPadelMirambel =
       "Alto las piscinas, 44141, Mirambel, Teruel";
 
+// Dialogo de informacin en dispositivos IOS
   void mostrarAlertaIOS(BuildContext context, String titulo, String mensaje) {
     showCupertinoDialog(
       barrierDismissible: true,
@@ -57,6 +59,7 @@ class MapPage extends StatelessWidget {
     );
   }
 
+// Dialogo de informacion en dispositivos Android
   void mostrarAlertaAndroid(
       BuildContext context, String titulo, String mensaje) {
     showDialog(

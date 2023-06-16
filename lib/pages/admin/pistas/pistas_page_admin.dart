@@ -27,6 +27,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
     fetchPistas();
   }
 
+// Metodo que obtiene la lista de pistas desde base de datos
   Future<void> fetchPistas() async {
     final response = await http
         .get(Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'));
@@ -43,6 +44,7 @@ class _PistasPageAdminState extends State<PistasPageAdmin> {
     }
   }
 
+// Funcion que nos envia a la pagina para crear la nueva pista
   void _navigateToCreatePistaPage() async {
     final newPista = await Navigator.push(
       context,

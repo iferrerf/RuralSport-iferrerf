@@ -10,12 +10,12 @@ class TP_tarjeta_pistas extends StatelessWidget {
   final Map<String, dynamic> pistaInfo;
   final ThemeData theme;
 
+// Widget personalizado de las tarjetas de la lista de pistas
   @override
   Widget build(BuildContext context) {
     final List<String> images = pistaInfo['images'] ?? [];
     final String nombre = pistaInfo['nombre'] ?? '';
     final String localidad = pistaInfo['lugar'] ?? '';
-
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

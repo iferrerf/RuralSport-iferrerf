@@ -25,8 +25,6 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
   Pista? pistaSeleccionada;
 
   String? diaSelect;
-  String? horaInicioSelect;
-  String? horaFinSelect;
 
   late DateTime selectedDate;
   late TimeOfDay selectedTimeStart;
@@ -38,8 +36,9 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
 
     selectedDate = DateTime.now();
     selectedTimeStart = TimeOfDay.now();
-    selectedTimeEnd = TimeOfDay.now();
+    selectedTimeEnd = selectedTimeStart;
 
+    obtenerPistas();
     fetchReservas();
 
     FirebaseFirestore.instance.collection(COLLECTION_NAME).snapshots().listen(
@@ -69,7 +68,6 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
           IconButton(
             onPressed: () {
               //Abro el Dialogo para introducir los datos
-              obtenerPistas();
               showItemDialog();
             },
             icon: const Icon(
@@ -96,15 +94,24 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
               children: [
                 SlidableAction(
                   onPressed: (context) {
-                    eliminarReserva(listaReservas[index].id!);
-                    // Muestro un Snackbar diciendo que el producto se ha eliminado
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.redAccent,
-                        content:
-                            Text('Se ha eliminado la reserva correctamente'),
-                      ),
-                    );
+                    try {
+                      eliminarReserva(listaReservas[index].id!);
+                      // Muestro un Snackbar diciendo que el producto se ha eliminado
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.green,
+                          content:
+                              Text('Se ha eliminado la reserva correctamente'),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('Error al eliminar la reserva '),
+                        ),
+                      );
+                    }
                   },
                   backgroundColor: const Color(0xFFFE4A49),
                   foregroundColor: Colors.white,
@@ -121,6 +128,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
               margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: ListTile(
                 onTap: () {
+                  // Muestro el dialogo de actualizar reserva con la info precargada
                   showItemDialogUpdate(
                     listaReservas[index].id!,
                     listaReservas[index].usuario,
@@ -192,6 +200,8 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     );
   }
 
+// -------------FECHAS--------------
+// Funcion que selecciona una fecha con un calendario y la guarda
   Future<String> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -209,6 +219,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
         DateFormat('yyyy-MM-dd').format(selectedDate);
   }
 
+// Funcion que permite seleccionar una hora mediante un dialogo de reloj y lo guarda
   Future<void> _selectTimeStart(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -223,9 +234,10 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     }
   }
 
+// Calculamos la fecha final de la reserva en funcion de la fecha de entrada
   TimeOfDay _calculateTimeEnd(TimeOfDay selectTime) {
     final minutesPerHour = 60;
-    final minutesToAdd = 30;
+    final minutesToAdd = 90;
 
     final totalMinutes =
         selectTime.hour * minutesPerHour + selectTime.minute + minutesToAdd;
@@ -237,6 +249,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     return timeEnd;
   }
 
+// Convertmos un string en un TimeOfDay
   TimeOfDay _convertStringToTimeOfDay(String timeString) {
     final parts = timeString.split(':');
     final hour = int.parse(parts[0]);
@@ -244,13 +257,30 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  // Consultamos los registros de la colección de Firebase Firestore
-  void fetchReservas() async {
-    var listaReservas =
-        await FirebaseFirestore.instance.collection(COLLECTION_NAME).get();
-    mapReservas(listaReservas);
+// Funcion que devuelve el dia de la semana en texto
+  String getDiaSemana(DateTime date) {
+    final diasSemana = [
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado'
+          'Domingo',
+    ];
+    final diaSemana = date.weekday;
+    return diasSemana[diaSemana - 1];
   }
 
+// Funcion para transformar un TimeOfDay en string
+  String formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+// ---------------OBTENCIÓN DE DATOS------------------
+// Metodo que mapea la lista de reservas
   void mapReservas(QuerySnapshot<Map<String, dynamic>> _listaReserva) {
     var _list = _listaReserva.docs
         .map((reserva) => Reserva(
@@ -263,13 +293,12 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
             ))
         .toList();
 
-    print("_list:  $_list");
-
     setState(() {
       listaReservas = _list;
     });
   }
 
+// Metodo que hace una peticion a base de datos para obtener las pistas
   Future<void> obtenerPistas() async {
     try {
       final response = await http
@@ -292,6 +321,15 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     }
   }
 
+// Consultamos los registros de la colección de Firebase Firestore
+  void fetchReservas() async {
+    var listaReservas =
+        await FirebaseFirestore.instance.collection(COLLECTION_NAME).get();
+    mapReservas(listaReservas);
+  }
+
+// -------------DIÁLOGOS DE FORMULARIOS----------------
+// Dialogo de añadir nueva pista
   void showItemDialog() {
     var usuarioController = TextEditingController(text: "@gmail.com");
     ThemeData adminColor = AppTheme().adminTheme;
@@ -427,7 +465,9 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
                     alignment: Alignment.center,
                     child: TextButton(
                       onPressed: () {
-                        if (diaSelect != null && horaInicioSelect != null) {
+                        print(diaSelect);
+                        if (diaSelect != null &&
+                            selectedTimeEnd != selectedTimeStart) {
                           var usuario = usuarioController.text.trim();
                           var dia = diaSelect;
                           var horaInicio =
@@ -475,26 +515,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     );
   }
 
-  String getDiaSemana(DateTime date) {
-    final diasSemana = [
-      'Lunes',
-      'Martes',
-      'Miércoles',
-      'Jueves',
-      'Viernes',
-      'Sábado'
-          'Domingo',
-    ];
-    final diaSemana = date.weekday;
-    return diasSemana[diaSemana - 1];
-  }
-
-  String formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-
+// Dialogo de actualizar reserva
   void showItemDialogUpdate(
     String idDoc,
     String? usuario,
@@ -561,6 +582,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     );
   }
 
+// ----------ACCIONES DE LAS RESERVAS---------------
 // Metodo para añadir reserva a Firebase
   void addReserva(
       String usuario, String dia, String horaInicio, String horaFin) {
