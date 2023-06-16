@@ -10,33 +10,40 @@ const MAPBOX_ACCESS_TOKEN =
 final poliIglesuela = LatLng(40.48157221456962, -0.32274539967352234);
 final poliCantavieja = LatLng(40.52532706763187, -0.4047808490225969);
 final padelMirambel = LatLng(40.591989, -0.342386);
-final padelIglesuela = LatLng(40.48186855251597, -0.3233418361936311);
+final padelIglesuela = LatLng(40.482076, -0.315651);
 final tenisCantavieja = LatLng(40.523244, -0.404215);
 final zoom = LatLng(40.547240, -0.348118);
 
 class MapPage extends StatelessWidget {
   MapPage({super.key});
 
-  final String textoPoli =
-      "- Multideporte en espacio cerrado\n- Abierta todo el año\n- Uso en horario de actividades";
-  final String textoPadel = "- Pista al aire libre\n- Abierta todo el año";
-  final String rutaImagenes = "assets/pistas/";
+  final String textoPoliCtvj = "C.Garcia Valiño, 44140 Cantavieja, Teruel";
+  final String textoTenisCtvj = "Las piscinas, 44140 Cantavieja, Teruel";
+  final String textoPoliIglesuela =
+      "C.Fuentenueva, 44142 Iglesuela del Cid, Teruel";
+  final String textoPadelIglesuela =
+      "C.Calvario, 44142 Iglesuela del Cid, Teruel";
+  final String textoPadelMirambel =
+      "Alto las piscinas, 44141, Mirambel, Teruel";
 
-  void mostrarAlertaIOS(
-      BuildContext context, String titulo, String mensaje, String rutaImagen) {
+  void mostrarAlertaIOS(BuildContext context, String titulo, String mensaje) {
     showCupertinoDialog(
       barrierDismissible: true,
       context: context,
       builder: ((context) {
         return CupertinoAlertDialog(
-          title: Center(child: Text(titulo)),
+          title: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.location_on_outlined),
+                Text(titulo),
+              ],
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(rutaImagen),
-              SizedBox(
-                height: 10,
-              ),
               Text(mensaje),
             ],
           ),
@@ -51,35 +58,50 @@ class MapPage extends StatelessWidget {
   }
 
   void mostrarAlertaAndroid(
-      BuildContext context, String titulo, String mensaje, String rutaImagen) {
+      BuildContext context, String titulo, String mensaje) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: ((context) {
-          return AlertDialog(
-            elevation: 5,
-            title: Center(
-                child: Text(
-              titulo,
-              style: TextStyle(fontSize: 18),
-            )),
-            content: Column(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(rutaImagen),
-                SizedBox(
-                  height: 20,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.location_on_outlined),
+                    SizedBox(width: 8),
+                    Text(
+                      titulo,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(mensaje),
+                SizedBox(height: 16),
+                Text(
+                  mensaje,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Ok'),
+                ),
               ],
             ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Ok'))
-            ],
-          );
-        }));
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -121,14 +143,12 @@ class MapPage extends StatelessWidget {
                               ? mostrarAlertaAndroid(
                                   context,
                                   "Padel Mirambel",
-                                  textoPadel,
-                                  rutaImagenes + "padelmirambel.jpg",
+                                  textoPadelMirambel,
                                 )
                               : mostrarAlertaIOS(
                                   context,
                                   "Padel Mirambel",
-                                  textoPadel,
-                                  rutaImagenes + "padelmirambel.jpg",
+                                  textoPadelMirambel,
                                 );
                         },
                         iconSize: 20,
@@ -147,14 +167,12 @@ class MapPage extends StatelessWidget {
                               ? mostrarAlertaAndroid(
                                   context,
                                   "Padel Iglesuela del Cid",
-                                  textoPadel,
-                                  rutaImagenes + "pistaiglesuela.jpg",
+                                  textoPadelIglesuela,
                                 )
                               : mostrarAlertaIOS(
                                   context,
                                   "Padel Iglesuela del Cid",
-                                  textoPadel,
-                                  rutaImagenes + "pistaiglesuela.jpg",
+                                  textoPadelIglesuela,
                                 );
                         },
                         iconSize: 20,
@@ -173,14 +191,12 @@ class MapPage extends StatelessWidget {
                               ? mostrarAlertaAndroid(
                                   context,
                                   "Polideportivo Cantavieja",
-                                  textoPoli,
-                                  rutaImagenes + "polideportivocantavieja.jpg",
+                                  textoPoliCtvj,
                                 )
                               : mostrarAlertaIOS(
                                   context,
                                   "Polideportivo Cantavieja",
-                                  textoPoli,
-                                  rutaImagenes + "polideportivocantavieja.jpg",
+                                  textoPoliCtvj,
                                 );
                         },
                         iconSize: 20,
@@ -199,14 +215,12 @@ class MapPage extends StatelessWidget {
                               ? mostrarAlertaAndroid(
                                   context,
                                   "Polideportivo Iglesuela del Cid",
-                                  textoPoli,
-                                  rutaImagenes + "polideportivoiglesuela.jpg",
+                                  textoPoliIglesuela,
                                 )
                               : mostrarAlertaIOS(
                                   context,
                                   "Polideportivo Iglesuela del Cid",
-                                  textoPoli,
-                                  rutaImagenes + "polideportivoiglesuela.jpg",
+                                  textoPoliIglesuela,
                                 );
                         },
                         iconSize: 20,
@@ -225,14 +239,12 @@ class MapPage extends StatelessWidget {
                               ? mostrarAlertaAndroid(
                                   context,
                                   "Pista de Tenis Cantavieja",
-                                  textoPadel,
-                                  rutaImagenes + "tenis2.jpg",
+                                  textoTenisCtvj,
                                 )
                               : mostrarAlertaIOS(
                                   context,
                                   "Pista de Tenis Cantavieja",
-                                  textoPadel,
-                                  rutaImagenes + "tenis2.jpg",
+                                  textoTenisCtvj,
                                 );
                         },
                         iconSize: 20,

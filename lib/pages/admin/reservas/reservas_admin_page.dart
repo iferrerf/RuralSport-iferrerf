@@ -31,7 +31,6 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
   late DateTime selectedDate;
   late TimeOfDay selectedTimeStart;
   late TimeOfDay selectedTimeEnd;
-  late TimeOfDay calculatedTimeEnd;
 
   @override
   void initState() {
@@ -41,10 +40,6 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     selectedTimeStart = TimeOfDay.now();
     selectedTimeEnd = TimeOfDay.now();
 
-    calculatedTimeEnd = selectedTimeEnd;
-
-    obtenerPistas();
-
     fetchReservas();
 
     FirebaseFirestore.instance.collection(COLLECTION_NAME).snapshots().listen(
@@ -52,88 +47,6 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
         mapReservas(reservas);
       },
     );
-  }
-
-  Future<String> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 30)),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-    return getDiaSemana(selectedDate) +
-        ' ' +
-        DateFormat('yyyy-MM-dd').format(selectedDate);
-  }
-
-  Future<void> _selectTimeStart(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: selectedTimeStart,
-    );
-
-    if (pickedTime != null) {
-      setState(() {
-        selectedTimeStart = pickedTime;
-        selectedTimeEnd = pickedTime.replacing(
-          hour: pickedTime.hour + 1,
-          minute: pickedTime.minute + 30,
-        );
-      });
-    }
-  }
-
-  // Consultamos los registros de la colección de Firebase Firestore
-  void fetchReservas() async {
-    var listaReservas =
-        await FirebaseFirestore.instance.collection(COLLECTION_NAME).get();
-    mapReservas(listaReservas);
-  }
-
-  void mapReservas(QuerySnapshot<Map<String, dynamic>> _listaReserva) {
-    var _list = _listaReserva.docs
-        .map((reserva) => Reserva(
-              id: reserva.id,
-              usuario: reserva['usuario'],
-              dia: reserva['dia'],
-              horaInicio: reserva['horaInicio'],
-              horaFin: reserva['horaFin'],
-              pista: Pista.fromJson(reserva['pista']),
-            ))
-        .toList();
-
-    print("_list:  $_list");
-
-    setState(() {
-      listaReservas = _list;
-    });
-  }
-
-  Future<void> obtenerPistas() async {
-    try {
-      final response = await http
-          .get(Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'));
-
-      if (response.statusCode == 200) {
-        final List<dynamic> datos = jsonDecode(response.body);
-        final List<Pista> listaPistas =
-            datos.map((item) => Pista.fromJson(item)).toList();
-
-        setState(() {
-          pistas = listaPistas;
-        });
-      } else {
-        print(
-            'Error al obtener las pistas. Código de estado: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error en la solicitud HTTP: $error');
-    }
   }
 
   @override
@@ -156,6 +69,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
           IconButton(
             onPressed: () {
               //Abro el Dialogo para introducir los datos
+              obtenerPistas();
               showItemDialog();
             },
             icon: const Icon(
@@ -212,7 +126,6 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
                     listaReservas[index].usuario,
                     listaReservas[index].dia,
                     listaReservas[index].horaInicio,
-                    listaReservas[index].horaFin,
                   );
                 },
                 title: Column(
@@ -279,167 +192,282 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     );
   }
 
+  Future<String> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 30)),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+    return getDiaSemana(selectedDate) +
+        ' ' +
+        DateFormat('yyyy-MM-dd').format(selectedDate);
+  }
+
+  Future<void> _selectTimeStart(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTimeStart,
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        selectedTimeStart = pickedTime;
+        selectedTimeEnd = _calculateTimeEnd(pickedTime);
+      });
+    }
+  }
+
+  TimeOfDay _calculateTimeEnd(TimeOfDay selectTime) {
+    final minutesPerHour = 60;
+    final minutesToAdd = 30;
+
+    final totalMinutes =
+        selectTime.hour * minutesPerHour + selectTime.minute + minutesToAdd;
+    final hour = totalMinutes ~/ minutesPerHour;
+    final minute = totalMinutes % minutesPerHour;
+
+    final timeEnd = TimeOfDay(hour: hour, minute: minute);
+
+    return timeEnd;
+  }
+
+  TimeOfDay _convertStringToTimeOfDay(String timeString) {
+    final parts = timeString.split(':');
+    final hour = int.parse(parts[0]);
+    final minute = int.parse(parts[1]);
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  // Consultamos los registros de la colección de Firebase Firestore
+  void fetchReservas() async {
+    var listaReservas =
+        await FirebaseFirestore.instance.collection(COLLECTION_NAME).get();
+    mapReservas(listaReservas);
+  }
+
+  void mapReservas(QuerySnapshot<Map<String, dynamic>> _listaReserva) {
+    var _list = _listaReserva.docs
+        .map((reserva) => Reserva(
+              id: reserva.id,
+              usuario: reserva['usuario'],
+              dia: reserva['dia'],
+              horaInicio: reserva['horaInicio'],
+              horaFin: reserva['horaFin'],
+              pista: Pista.fromJson(reserva['pista']),
+            ))
+        .toList();
+
+    print("_list:  $_list");
+
+    setState(() {
+      listaReservas = _list;
+    });
+  }
+
+  Future<void> obtenerPistas() async {
+    try {
+      final response = await http
+          .get(Uri.parse('https://rural-sport-bknd.vercel.app/api/pistas'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> datos = jsonDecode(response.body);
+        final List<Pista> listaPistas =
+            datos.map((item) => Pista.fromJson(item)).toList();
+
+        setState(() {
+          pistas = listaPistas;
+        });
+      } else {
+        print(
+            'Error al obtener las pistas. Código de estado: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error en la solicitud HTTP: $error');
+    }
+  }
+
   void showItemDialog() {
     var usuarioController = TextEditingController(text: "@gmail.com");
     ThemeData adminColor = AppTheme().adminTheme;
-
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: const [
-                    SizedBox(
-                      width: 70,
-                      child: Icon(Icons.note_add_outlined),
-                    ),
-                    SizedBox(
-                      child: Text(
-                        'Añadir Reserva',
-                        style: TextStyle(fontSize: 20),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      SizedBox(
+                        width: 70,
+                        child: Icon(Icons.note_add_outlined),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Email del usuario'),
-                  controller: usuarioController,
-                  style: TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 20),
-                DropdownButtonFormField<Pista>(
-                  decoration: InputDecoration(labelText: 'Pista'),
-                  value: pistaSeleccionada,
-                  items: pistas.map((pista) {
-                    return DropdownMenuItem<Pista>(
-                      value: pista,
-                      child: Text(
-                        pista.nombre + " - " + pista.localidad,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      pistaSeleccionada = val;
-                    });
-                  },
-                  isExpanded: true,
-                  menuMaxHeight: 200,
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Día de la reserva:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextButton(
-                      onPressed: () {
-                        _selectDate(context).then((selectedDate) {
-                          setState(() {
-                            diaSelect = selectedDate;
-                          });
-                        });
-                      },
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.all(16),
+                      SizedBox(
+                        child: Text(
+                          'Añadir Reserva',
+                          style: TextStyle(fontSize: 20),
                         ),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            adminColor.primaryColor),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.calendar_today),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            '${getDiaSemana(selectedDate)} ${DateFormat('yyyy-MM-dd').format(selectedDate)}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hora de inicio:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextButton(
-                      onPressed: () {
-                        _selectTimeStart(context);
-                      },
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.all(16),
-                        ),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            adminColor.primaryColor),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.timer_outlined),
-                          SizedBox(width: 10),
-                          Text(
-                            '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                    onPressed: () {
-                      var usuario = usuarioController.text.trim();
-                      var dia = diaSelect!;
-                      var horaInicio =
-                          '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}';
-                      var horaFin =
-                          '${selectedTimeEnd.hour.toString().padLeft(2, '0')}:${selectedTimeEnd.minute.toString().padLeft(2, '0')}';
-                      addReserva(usuario, dia, horaInicio, horaFin);
-                      Navigator.of(context).maybePop();
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.all(16),
-                      ),
-                    ),
-                    child: const Text('Añadir', style: TextStyle(fontSize: 18)),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Email del usuario'),
+                    controller: usuarioController,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  DropdownButtonFormField<Pista>(
+                    decoration: InputDecoration(labelText: 'Pista'),
+                    value: pistaSeleccionada,
+                    items: pistas.map((pista) {
+                      return DropdownMenuItem<Pista>(
+                        value: pista,
+                        child: Text(
+                          pista.nombre + " - " + pista.localidad,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        pistaSeleccionada = val;
+                      });
+                    },
+                    isExpanded: true,
+                    menuMaxHeight: 200,
+                  ),
+                  const SizedBox(height: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          'Día de la reserva:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          _selectDate(context).then((selectedDate) {
+                            setState(() {
+                              diaSelect = selectedDate;
+                            });
+                          });
+                        },
+                        style: ButtonStyle(
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.all(16),
+                          ),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              adminColor.primaryColor),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Icon(Icons.calendar_today),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          'Hora de inicio:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          _selectTimeStart(context);
+                        },
+                        style: ButtonStyle(
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.all(16),
+                          ),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              adminColor.primaryColor),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Icon(Icons.timer_outlined),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      onPressed: () {
+                        if (diaSelect != null && horaInicioSelect != null) {
+                          var usuario = usuarioController.text.trim();
+                          var dia = diaSelect;
+                          var horaInicio =
+                              '${selectedTimeStart.hour.toString().padLeft(2, '0')}:${selectedTimeStart.minute.toString().padLeft(2, '0')}';
+                          var horaFin =
+                              '${selectedTimeEnd.hour.toString().padLeft(2, '0')}:${selectedTimeEnd.minute.toString().padLeft(2, '0')}';
+                          addReserva(usuario, dia!, horaInicio, horaFin);
+                          Navigator.of(context).maybePop();
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text(
+                                    'Debes seleccionar una pista, una fecha y una hora.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Aceptar'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.all(16),
+                        ),
+                      ),
+                      child:
+                          const Text('Añadir', style: TextStyle(fontSize: 18)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -461,17 +489,21 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     return diasSemana[diaSemana - 1];
   }
 
+  String formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
   void showItemDialogUpdate(
     String idDoc,
     String? usuario,
     String dia,
-    String hora,
-    String tiempo,
+    String horaInicio,
   ) {
     var usuarioController = TextEditingController(text: usuario);
     var diaController = TextEditingController(text: dia);
-    var horaController = TextEditingController(text: hora);
-    var tiempoController = TextEditingController(text: tiempo);
+    var horaInicioController = TextEditingController(text: horaInicio);
 
     showDialog(
       context: context,
@@ -505,20 +537,17 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
                 TextField(
                   decoration:
                       const InputDecoration(labelText: 'Hora de inicio'),
-                  controller: horaController,
-                ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Tiempo de uso'),
-                  controller: tiempoController,
+                  controller: horaInicioController,
                 ),
                 TextButton(
                   onPressed: () {
                     var usuario = usuarioController.text.trim();
                     var dia = diaController.text.trim();
-                    var hora = horaController.text.trim();
-                    var tiempo = tiempoController.text.trim();
-
-                    actualizarReserva(idDoc, usuario, dia, hora, tiempo);
+                    var horaInicio = horaInicioController.text.trim();
+                    var hora_aux = _convertStringToTimeOfDay(horaInicio);
+                    var horaFin = _calculateTimeEnd(hora_aux);
+                    actualizarReserva(idDoc, usuario, dia, horaInicio,
+                        formatTimeOfDay(horaFin));
                     Navigator.pop(context);
                   },
                   child:
@@ -532,6 +561,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     );
   }
 
+// Metodo para añadir reserva a Firebase
   void addReserva(
       String usuario, String dia, String horaInicio, String horaFin) {
     if (pistaSeleccionada != null) {
@@ -549,6 +579,7 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
     }
   }
 
+// Metodo para eliminar la reserva por el idDoc de la reserva en Firebase
   void eliminarReserva(String idDoc) {
     FirebaseFirestore.instance.collection(COLLECTION_NAME).doc(idDoc).delete();
   }
@@ -556,15 +587,16 @@ class _ReservasAdminPageState extends State<ReservasAdminPage> {
   CollectionReference users =
       FirebaseFirestore.instance.collection(COLLECTION_NAME);
 
-  Future<void> actualizarReserva(
-      String idDoc, String usuario, String dia, String hora, String tiempo) {
+// Metodo para actualizar la reserva
+  Future<void> actualizarReserva(String idDoc, String usuario, String dia,
+      String horaInicio, String horaFin) {
     return users
         .doc(idDoc)
         .update({
           'usuario': usuario,
           'dia': dia,
-          'hora': hora,
-          'tiempo': tiempo,
+          'horaInicio': horaInicio,
+          'horaFin': horaFin,
         })
         .then((value) => print('Reserva actualizada correctamente'))
         .catchError((error) => print('Fallo al actualizar la reserva: $error'));
